@@ -11,6 +11,7 @@ public class Node {
 	private int depth;
 	private Node parent;
 	private State state;
+	private String action;
 
 	/**
 	 * Creates a node with a parent node and a depth.
@@ -53,6 +54,44 @@ public class Node {
 	public void setParent(Node parent) {
 		this.parent = parent;
 		this.depth = parent.getDepth() + 1;
+	}
+
+	/**
+	 * Returns the state this node.
+	 * 
+	 * @return The state of this node.
+	 */
+	public State getState() {
+		return state;
+	}
+
+	/**
+	 * Sets the state of this node.
+	 * 
+	 * @param state
+	 *            The new state of this node.
+	 */
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	/**
+	 * Returns the action taken in this node.
+	 * 
+	 * @return The action taken in this node.
+	 */
+	public String getAction() {
+		return action;
+	}
+
+	/**
+	 * Sets the action taken in this node.
+	 * 
+	 * @param action
+	 *            The new action taken in this node.
+	 */
+	public void setAction(String action) {
+		this.action = action;
 	}
 
 }

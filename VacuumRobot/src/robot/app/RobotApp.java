@@ -1,6 +1,7 @@
 package robot.app;
 
 import model.Grid;
+import model.Orientation;
 import model.Position;
 import model.SearchMethods;
 
@@ -8,33 +9,34 @@ public class RobotApp {
 
 	public static void main(String[] args) {
 
-		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2)"), getPositions("1,2/2,1/2,4/3,3)"), new Position(4, 3), "West");
-		
+		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2)"), getPositions("1,2/2,1/2,4/3,3)"),
+				new Position(4, 3), Orientation.WEST);
+
 		search(1, grid);
-		
+
 		printSolution();
-		
+
 	}
 
 	private static void printSolution() {
-		
+
 	}
 
 	private static void search(int method, Grid grid) {
 		SearchMethods search = new SearchMethods(grid);
-		if (method == 1){
+		if (method == 1) {
 			search.DFS();
-		} else if (method == 2){
+		} else if (method == 2) {
 			search.BFS();
-		} else if (method == 3){
+		} else if (method == 3) {
 			search.AStar();
 		}
-		
+
 	}
 
 	private static Grid generateGrid(int columns, int lines, Position[] obstacles, Position[] dirt,
-			Position robotPosition, String robotOrientation) {
-		Grid grid = new Grid(columns, lines, obstacles, dirt);
+			Position startPosition, Orientation orientation) {
+		Grid grid = new Grid(columns, lines, obstacles, dirt, startPosition, orientation);
 		return grid;
 	}
 
