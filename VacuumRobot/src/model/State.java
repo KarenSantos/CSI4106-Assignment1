@@ -16,6 +16,7 @@ public class State {
 	private Position robotPos;
 	private Orientation orientation;
 	private Action action;
+	private int amountOfDirt;
 
 	/**
 	 * Creates a state with the action taken to arrive at this state, and the
@@ -27,11 +28,14 @@ public class State {
 	 *            The position of the robot after the action.
 	 * @param orientation
 	 *            The orientation of the robot after the action.
+	 * @param amountOfDirt
+	 *            The amount of dirt left in the grid.
 	 */
-	public State(Action action, Position robotPos, Orientation orientation) {
+	public State(Action action, Position robotPos, Orientation orientation, int amountOfDirt) {
 		this.action = action;
 		this.robotPos = robotPos;
 		this.orientation = orientation;
+		this.amountOfDirt = amountOfDirt;
 	}
 
 	/**
@@ -89,6 +93,25 @@ public class State {
 	 */
 	public void setOrientation(Orientation orientation) {
 		this.orientation = orientation;
+	}
+
+	/**
+	 * Return the amount of dirt left in the grid.
+	 * 
+	 * @return The amount of dirt left in the grid.
+	 */
+	public int getAmountOfDirt() {
+		return amountOfDirt;
+	}
+
+	/**
+	 * Sets the amount of dirt left in the grid.
+	 * 
+	 * @param amountOfDirt
+	 *            The new amount of dirt left in the grid.
+	 */
+	public void setAmountOfDirt(int amountOfDirt) {
+		this.amountOfDirt = amountOfDirt;
 	}
 
 }

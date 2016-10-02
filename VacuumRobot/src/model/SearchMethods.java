@@ -6,14 +6,12 @@ import java.util.Stack;
 
 public class SearchMethods {
 
-	private Grid grid;
 	private Node startNode;
-	private Node goalNode;
+	private final int goalStateDirt = 0;
 
 	public SearchMethods(Grid grid) {
-		this.grid = grid;
-		// startNode = new Node(null, )
-		// TODO generate start and goal node to suppy the searches.
+		State startState = new State(null, grid.getStartPosition(), grid.getStartOrientation(), grid.getDirt().length);
+		startNode = new Node(null, startState);
 	}
 
 	public Node DFS() {
@@ -23,14 +21,14 @@ public class SearchMethods {
 		fringe.push(startNode);
 		while (!fringe.isEmpty()) {
 			Node currentNode = fringe.pop();
-			if (currentNode.getState() == goalNode.getState()) {
+			if (currentNode.getState().getAmountOfDirt() == goalStateDirt) {
 				result = currentNode;
 				break;
 			} else {
 				List<Node> children = getSuccessorDFS(currentNode);
 				closed.add(currentNode);
 				for (Node n : children) {
-					if (!closed.contains(n) && !fringe.contains(n)){
+					if (!closed.contains(n) && !fringe.contains(n)) {
 						fringe.add(n);
 					}
 				}
@@ -50,7 +48,7 @@ public class SearchMethods {
 
 	public List<Node> getSuccessorDFS(Node node) {
 		List<Node> children = new ArrayList<>();
-		
+
 		return children;
 	}
 

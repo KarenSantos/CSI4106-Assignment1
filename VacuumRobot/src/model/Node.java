@@ -1,28 +1,29 @@
 package model;
 
 /**
- * Class node that has a depth and a parent node.
+ * Class node that has a depth, a parent node, and a state.
  * 
  * @author karensaroc
  *
  */
 public class Node {
 
-	private int depth;
 	private Node parent;
+	private int depth;
 	private State state;
-	private String action;
 
 	/**
-	 * Creates a node with a parent node and a depth.
+	 * Creates a node with a parent node, a depth, and a state.
 	 * 
 	 * @param parent
 	 *            The parent node. If null node is a root node.
+	 * @param state
+	 *            The state of the node.
 	 */
-	public Node(Node parent) {
+	public Node(Node parent, State state) {
 		this.parent = parent;
 		if (parent == null)
-			this.depth = 0;
+			this.depth = 1;
 		else
 			this.depth = parent.getDepth() + 1;
 	}
@@ -37,9 +38,9 @@ public class Node {
 	}
 
 	/**
-	 * Returns the parent node of this node.
+	 * Returns the parent node of this node, or null if the node is a root.
 	 * 
-	 * @return The parent node.
+	 * @return The parent node or null if node is a root.
 	 */
 	public Node getParent() {
 		return parent;
@@ -73,25 +74,6 @@ public class Node {
 	 */
 	public void setState(State state) {
 		this.state = state;
-	}
-
-	/**
-	 * Returns the action taken in this node.
-	 * 
-	 * @return The action taken in this node.
-	 */
-	public String getAction() {
-		return action;
-	}
-
-	/**
-	 * Sets the action taken in this node.
-	 * 
-	 * @param action
-	 *            The new action taken in this node.
-	 */
-	public void setAction(String action) {
-		this.action = action;
 	}
 
 }
