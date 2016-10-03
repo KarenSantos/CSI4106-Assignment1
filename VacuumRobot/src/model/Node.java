@@ -22,6 +22,7 @@ public class Node {
 	 */
 	public Node(Node parent, State state) {
 		this.parent = parent;
+		this.state = state;
 		if (parent == null)
 			this.depth = 1;
 		else
@@ -74,6 +75,18 @@ public class Node {
 	 */
 	public void setState(State state) {
 		this.state = state;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = false;
+		if (obj != null && obj instanceof Node){
+			Node n = (Node) obj;
+			if (n.getState().equals(this.getState())){
+				result = true;
+			}
+		}
+		return result;
 	}
 
 }

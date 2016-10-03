@@ -1,22 +1,31 @@
 package model;
 
+import java.util.List;
+
 // put in the state things that can change in the problem. not the obstacles.
 //if you have a consistent heuristic your f(n) will never decrease.
 //heuristic could be going to all dirt without thinking about the obstacles.
 
 /**
- * State class that has the action taken to arrive at this state, and the robot
- * position and orientation after that action.
+ * State class that has the action taken to arrive at this state, the robot
+ * position and orientation after that action, and the dirt positions left to be
+ * cleaned.
  * 
  * @author karensaroc
  *
  */
 public class State {
 
+	private Action action;
 	private Position robotPos;
 	private Orientation orientation;
-	private Action action;
-	private int amountOfDirt;
+	private List<Position> dirtPositions;
+
+	/**
+	 * Creates a state with null values;
+	 */
+	public State() {
+	}
 
 	/**
 	 * Creates a state with the action taken to arrive at this state, and the
@@ -28,14 +37,14 @@ public class State {
 	 *            The position of the robot after the action.
 	 * @param orientation
 	 *            The orientation of the robot after the action.
-	 * @param amountOfDirt
-	 *            The amount of dirt left in the grid.
+	 * @param dirtPositions
+	 *            The list with the positions of dirt left to clean.
 	 */
-	public State(Action action, Position robotPos, Orientation orientation, int amountOfDirt) {
+	public State(Action action, Position robotPos, Orientation orientation, List<Position> dirtPositions) {
 		this.action = action;
 		this.robotPos = robotPos;
 		this.orientation = orientation;
-		this.amountOfDirt = amountOfDirt;
+		this.dirtPositions = dirtPositions;
 	}
 
 	/**
@@ -96,22 +105,55 @@ public class State {
 	}
 
 	/**
-	 * Return the amount of dirt left in the grid.
+	 * Return the dirt positions left to be cleaned.
 	 * 
-	 * @return The amount of dirt left in the grid.
+	 * @return The dirt positions left to be cleaned.
 	 */
-	public int getAmountOfDirt() {
-		return amountOfDirt;
+	public List<Position> getDirtPositions() {
+		return dirtPositions;
 	}
 
 	/**
-	 * Sets the amount of dirt left in the grid.
+	 * Sets the dirt positions left to be cleaned.
 	 * 
-	 * @param amountOfDirt
-	 *            The new amount of dirt left in the grid.
+	 * @param dirtPositions
+	 *            The new dirt left in the grid.
 	 */
-	public void setAmountOfDirt(int amountOfDirt) {
-		this.amountOfDirt = amountOfDirt;
+	public void setDirtPositions(List<Position> dirtPositions) {
+		this.dirtPositions = dirtPositions;
+	}
+
+	/**
+	 * Removes a dirt position from the list of dirt positions left to be
+	 * cleaned.
+	 * 
+	 * @param dirtPosition
+	 */
+	public void clean(Position dirtPosition) {
+		this.dirtPositions.remove(dirtPosition);
+	}
+
+	@Override
+	public String toString() {
+		return "(" + action + ", " + robotPos + ", " + orientation + ", " + getDirtPositions() + ")";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = false;
+		if (obj != null && obj instanceof State) {
+			State s = (State) obj;
+			if (s.getRobotPos().equals(this.getRobotPos()) && s.getOrientation() == this.getOrientation()
+					&& s.getDirtPositions().size() == this.getDirtPositions().size()) {
+				result = true;
+				for (Position p : s.getDirtPositions()) {
+					if (!this.getDirtPositions().contains(p)) {
+						result = false;
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 }

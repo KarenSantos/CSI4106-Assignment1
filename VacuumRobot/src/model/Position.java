@@ -8,19 +8,8 @@ package model;
  */
 public class Position {
 
-	/**
-	 * The component X of the position.
-	 */
 	private int x;
-
-	/**
-	 * The component Y of the position.
-	 */
 	private int y;
-
-	/**
-	 * The position represented as an array of 2 integers.
-	 */
 	private int[] position;
 
 	/**
@@ -78,6 +67,44 @@ public class Position {
 	}
 
 	/**
+	 * Returns the position moving to the specified orientation of this current
+	 * position.
+	 * 
+	 * @param orientation
+	 *            The orientation where to show the next position.
+	 * @return The position moving to the specified orientation or null if orientation not specified.
+	 */
+	public Position showPositionMoving(Orientation orientation) {
+		Position newPosition = null;
+		if (orientation == Orientation.WEST) {
+			newPosition = new Position(getX() - 1, getY());
+		} else if (orientation == Orientation.NORTH) {
+			newPosition = new Position(getX(), getY() - 1);
+		} else if (orientation == Orientation.EAST) {
+			newPosition = new Position(getX() + 1, getY());
+		} else if (orientation == Orientation.SOUTH) {
+			newPosition = new Position(getX(), getY() + 1);
+		}
+		return newPosition;
+	}
+
+	public Position showWestPosition() {
+		return new Position(getX() - 1, getY());
+	}
+
+	public Position showNorthPosition() {
+		return new Position(getX(), getY() - 1);
+	}
+
+	public Position showEastPosition() {
+		return new Position(getX() + 1, getY());
+	}
+
+	public Position showSouthPosition() {
+		return new Position(getX(), getY() + 1);
+	}
+
+	/**
 	 * Returns the position as an array of 2 integers.
 	 * 
 	 * @return The position.
@@ -85,10 +112,22 @@ public class Position {
 	public int[] getPosition() {
 		return position;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "(" + x + "," + y + ")";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = false;
+		if (obj != null && obj instanceof Position){
+			Position p = (Position) obj;
+			if (p.getX() == this.getX() && p.getY() == this.getY()){
+				result = true;
+			}
+		}
+		return result;
 	}
 
 }

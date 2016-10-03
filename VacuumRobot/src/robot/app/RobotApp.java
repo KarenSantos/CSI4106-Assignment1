@@ -1,6 +1,11 @@
 package robot.app;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
 import model.Grid;
+import model.Node;
 import model.Orientation;
 import model.Position;
 import model.SearchMethods;
@@ -9,32 +14,42 @@ public class RobotApp {
 
 	public static void main(String[] args) {
 
-		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2)"), getPositions("1,2/2,1/2,4/3,3)"),
+		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/2,4/3,3"),
 				new Position(4, 3), Orientation.WEST);
+		
+		Node solution = search(1, grid);
 
-		search(1, grid);
-
-		printSolution();
-
-	}
-
-	private static void printSolution() {
+		printSolution(solution);
 
 	}
 
-	private static void search(int method, Grid grid) {
-		SearchMethods search = new SearchMethods(grid);
-		if (method == 1) {
-			search.DFS();
-		} else if (method == 2) {
-			search.BFS();
-		} else if (method == 3) {
-			search.AStar();
+	private static void printSolution(Node solution) {
+		Stack<Node> allNodes = new Stack<>();
+		allNodes.add(solution);
+		Node node = solution;
+		while(node.getParent() != null){
+			allNodes.add(node.getParent());
+			node = node.getParent();
 		}
-
+		while(!allNodes.isEmpty()){
+			System.out.println(allNodes.pop().getState().toString());
+		}
 	}
 
-	private static Grid generateGrid(int columns, int lines, Position[] obstacles, Position[] dirt,
+	private static Node search(int method, Grid grid) {
+		SearchMethods search = new SearchMethods(grid);
+		Node result = null;
+		if (method == 1) {
+			result = search.DFS();
+		} else if (method == 2) {
+			result = search.BFS();
+		} else if (method == 3) {
+			result = search.AStar();
+		}
+		return result;
+	}
+
+	private static Grid generateGrid(int columns, int lines, List<Position> obstacles, List<Position> dirt,
 			Position startPosition, Orientation orientation) {
 		Grid grid = new Grid(columns, lines, obstacles, dirt, startPosition, orientation);
 		return grid;
@@ -50,16 +65,15 @@ public class RobotApp {
 	 * @return The array of positions or null if no positions were identified in
 	 *         the string.
 	 */
-	private static Position[] getPositions(String positionsString) {
-		Position[] positions = null;
+	private static List<Position> getPositions(String positionsString) {
+		List<Position> positions = new ArrayList<>();
 		if (positionsString.length() > 0) {
 			String[] pos = positionsString.split("/");
-			positions = new Position[pos.length];
 			for (int i = 0; i < pos.length; i++) {
 				try {
 					int x = Integer.parseInt(pos[i].split(",")[0]);
 					int y = Integer.parseInt(pos[i].split(",")[1]);
-					positions[i] = new Position(x, y);
+					positions.add(new Position(x, y));
 				} catch (Exception e) {
 				}
 			}

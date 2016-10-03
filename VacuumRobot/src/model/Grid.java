@@ -14,9 +14,9 @@ public class Grid {
 
 	private int columns;
 	private int lines;
-	private List<Position> positions;
-	private Position[] obstacles;
-	private Position[] dirt;
+	private List<Position> obstacles;
+	private List<Position> dirt;
+	private List<Position> freePositions;
 	private Position startPosition;
 	private Orientation startOrientation;
 
@@ -29,23 +29,23 @@ public class Grid {
 	 * @param lines
 	 *            The number of lines in the grid.
 	 * @param obstacles
-	 *            The positions of the obstacles.
+	 *            The list with the positions of the obstacles.
 	 * @param dirt
-	 *            The positions of the dirt.
+	 *            The list with the positions of the dirt.
 	 * @param startPosition
 	 *            The start position of the robot.
 	 * @param startOrientation
 	 *            The start orientation of the robot.
 	 * 
 	 */
-	public Grid(int columns, int lines, Position[] obstacles, Position[] dirt, Position startPosition,
+	public Grid(int columns, int lines, List<Position> obstacles, List<Position> dirt, Position startPosition,
 			Orientation startOrientation) {
 		// TODO test if position of obstacles and dirt are part of the grid.
 		this.columns = columns;
 		this.lines = lines;
 		this.obstacles = obstacles;
 		this.dirt = dirt;
-		this.positions = generatePositions();
+		this.freePositions = generateFreePositions();
 		this.startPosition = startPosition;
 		this.startOrientation = startOrientation;
 		// TODO maybe record start state instead of position and orientation
@@ -92,31 +92,11 @@ public class Grid {
 	}
 
 	/**
-	 * Returns the list of all positions in the grid.
-	 * 
-	 * @return The list of all positions in the grid.
-	 */
-	public List<Position> getPositions() {
-		return positions;
-	}
-
-	/**
-	 * Sets the list of positions in the grid.
-	 * 
-	 * @param positions
-	 *            The new list of positions in the grid.
-	 */
-	public void setPositions(List<Position> positions) {
-		// TODO test if they are a match for the columns, lines and others.
-		this.positions = positions;
-	}
-
-	/**
 	 * Returns the list of all positions with obstacles in the grid.
 	 * 
 	 * @return The list of all positions with obstacles in the grid.
 	 */
-	public Position[] getObstacles() {
+	public List<Position> getObstacles() {
 		return obstacles;
 	}
 
@@ -126,7 +106,7 @@ public class Grid {
 	 * @param obstacles
 	 *            The new list of positions with obstacles in the grid.
 	 */
-	public void setObstacles(Position[] obstacles) {
+	public void setObstacles(List<Position> obstacles) {
 		// TODO test if they are according to the grid.
 		this.obstacles = obstacles;
 	}
@@ -136,7 +116,7 @@ public class Grid {
 	 * 
 	 * @return The list of all positions with dirt in the grid.
 	 */
-	public Position[] getDirt() {
+	public List<Position> getDirt() {
 		return dirt;
 	}
 
@@ -146,7 +126,7 @@ public class Grid {
 	 * @param dirt
 	 *            The new list of positions with dirt in the grid.
 	 */
-	public void setDirt(Position[] dirt) {
+	public void setDirt(List<Position> dirt) {
 		// TODO test if they are according to the grid.
 		this.dirt = dirt;
 	}
@@ -191,15 +171,30 @@ public class Grid {
 	}
 
 	/**
+	 * Returns if a position is allowed or not for the robot in the grid.
+	 * 
+	 * @param position
+	 *            The position to be tested.
+	 * @return True if the position is inside the grid and it's not an obstacle
+	 *         or false otherwise.
+	 */
+	public boolean isPositionAllowed(Position position) {
+		return freePositions.contains(position);
+	}
+
+	/**
 	 * Generate a list with all the positions in the grid;
 	 * 
 	 * @return The list with all the positions in the grid;
 	 */
-	private List<Position> generatePositions() {
+	private List<Position> generateFreePositions() {
 		List<Position> positions = new ArrayList<>();
 		for (int i = 1; i <= columns; i++) {
 			for (int j = 1; j <= lines; j++) {
-				positions.add(new Position(i, j));
+				Position pos = new Position(i, j);
+				if (!getObstacles().contains(pos)){
+					positions.add(pos);
+				}
 			}
 		}
 		return positions;
