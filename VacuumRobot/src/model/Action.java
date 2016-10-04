@@ -5,8 +5,11 @@ import java.util.List;
 
 public enum Action {
 
-	RIGHT, LEFT, MOVE, SUCK;
-	
+	START(0),RIGHT (20), LEFT(20), MOVE(50), SUCK(10);
+	int engery=0;
+	Action(int engery){
+		this.engery=engery;
+	}
 	public static List<Action> getActions(){
 		List<Action> actions = new ArrayList<>();
 		actions.add(Action.LEFT);
@@ -14,6 +17,9 @@ public enum Action {
 		actions.add(Action.RIGHT);
 		actions.add(Action.SUCK);
 		return actions;
+	}
+	public int getEngery(){
+		return engery;
 	}
 	
 }

@@ -14,10 +14,12 @@ public class RobotApp {
 
 	public static void main(String[] args) {
 
-		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/2,4/3,3"),
-				new Position(4, 3), Orientation.WEST);
+		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2/4,2/4,3"), getPositions("1,2/2,1/3,3"),
+				new Position(3, 4), Orientation.WEST);
+//		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3"),
+//				new Position(3, 4), Orientation.WEST);
 		
-		Node solution = search(1, grid);
+		Node solution = search(3, grid);
 
 		printSolution(solution);
 
@@ -27,13 +29,18 @@ public class RobotApp {
 		Stack<Node> allNodes = new Stack<>();
 		allNodes.add(solution);
 		Node node = solution;
+		int totalCost=0;
 		while(node.getParent() != null){
+			totalCost+=node.getState().getAction().getEngery();
 			allNodes.add(node.getParent());
 			node = node.getParent();
 		}
 		while(!allNodes.isEmpty()){
 			System.out.println(allNodes.pop().getState().toString());
+
 		}
+		System.out.println("total cost: "+totalCost);
+		System.out.println("depth: "+solution.getDepth());
 	}
 
 	private static Node search(int method, Grid grid) {

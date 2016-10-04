@@ -77,13 +77,13 @@ public class Position {
 	public Position showPositionMoving(Orientation orientation) {
 		Position newPosition = null;
 		if (orientation == Orientation.WEST) {
-			newPosition = new Position(getX() - 1, getY());
+			newPosition = new Position(getX(), getY()-1);
 		} else if (orientation == Orientation.NORTH) {
-			newPosition = new Position(getX(), getY() - 1);
+			newPosition = new Position(getX()+1, getY());
 		} else if (orientation == Orientation.EAST) {
-			newPosition = new Position(getX() + 1, getY());
+			newPosition = new Position(getX(), getY()+1);
 		} else if (orientation == Orientation.SOUTH) {
-			newPosition = new Position(getX(), getY() + 1);
+			newPosition = new Position(getX()-1,getY());
 		}
 		return newPosition;
 	}

@@ -20,6 +20,7 @@ public class State {
 	private Position robotPos;
 	private Orientation orientation;
 	private List<Position> dirtPositions;
+	private int engery=0;
 
 	/**
 	 * Creates a state with null values;
@@ -45,6 +46,7 @@ public class State {
 		this.robotPos = robotPos;
 		this.orientation = orientation;
 		this.dirtPositions = dirtPositions;
+		this.engery=0;
 	}
 
 	/**
@@ -55,6 +57,12 @@ public class State {
 	public Action getAction() {
 		return action;
 	}
+	public int getEngery() {
+		return engery;
+	}
+	public void setEngery(int engery){
+		this.engery=engery;
+	}
 
 	/**
 	 * Sets the action taken to arrive at this state.
@@ -63,6 +71,7 @@ public class State {
 	 *            The action taken to arrive at this state.
 	 */
 	public void setAction(Action action) {
+//		this.engery=this.action.getEngery()+action.getEngery();
 		this.action = action;
 	}
 
@@ -135,7 +144,7 @@ public class State {
 
 	@Override
 	public String toString() {
-		return "(" + action + ", " + robotPos + ", " + orientation + ", " + getDirtPositions() + ")";
+		return "(" + action +" , "+action.getEngery()+ " , " + robotPos + ", " + orientation + ", " + getDirtPositions() + ")";
 	}
 
 	@Override
