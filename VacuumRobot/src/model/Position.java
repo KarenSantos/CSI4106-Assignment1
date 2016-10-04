@@ -1,12 +1,14 @@
 package model;
 
+import java.util.Comparator;
+
 /**
  * Class that creates a position with components X and Y;
  * 
  * @author karensaroc
  *
  */
-public class Position {
+public class Position implements Comparable<Position> {
 
 	private int x;
 	private int y;
@@ -79,11 +81,11 @@ public class Position {
 		if (orientation == Orientation.WEST) {
 			newPosition = new Position(getX(), getY()-1);
 		} else if (orientation == Orientation.NORTH) {
-			newPosition = new Position(getX()+1, getY());
+			newPosition = new Position(getX()-1, getY());
 		} else if (orientation == Orientation.EAST) {
 			newPosition = new Position(getX(), getY()+1);
 		} else if (orientation == Orientation.SOUTH) {
-			newPosition = new Position(getX()-1,getY());
+			newPosition = new Position(getX()+1,getY());
 		}
 		return newPosition;
 	}
@@ -129,5 +131,22 @@ public class Position {
 		}
 		return result;
 	}
+
+
+	@Override
+// for calculating the min distance b/w robot and a dirt
+	public int compareTo(Position o) {
+		// TODO Auto-generated method stub
+		return Math.abs(this.x)+Math.abs(this.y)-(Math.abs(o.x)+Math.abs(o.y));
+	}
+	public static Comparator<Position> positionComparator
+		= new Comparator<Position>() {
+
+		public int compare(Position o1, Position o2) {
+			// TODO Auto-generated method stub
+			return o1.compareTo(o2);
+//			return o2.compareTo(o1);
+		}
+	};
 
 }

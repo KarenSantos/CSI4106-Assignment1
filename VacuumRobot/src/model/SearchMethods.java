@@ -1,7 +1,7 @@
 package model;
 
-import java.io.Console;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -116,43 +116,53 @@ public class SearchMethods {
 			int engery=node.getState().getEngery();
 			if (a == Action.LEFT) {
 				
-				childState.setEngery(engery+a.getEngery());
+				
 				
 				childState.setAction(a);
 				childState.setRobotPos(state.getRobotPos());
 				childState.setOrientation(getNewOrientation(state.getOrientation(), Action.LEFT));
 				childState.setDirtPositions(state.getDirtPositions());
+				childState.setEngery(engery+heuristic(childState)+a.getEngery());
 				children.add(new Node(node, childState));
+				System.out.println("Action: "+a+"\tTotalCost: "+childState.getEngery());
+				
 			} else if (a == Action.MOVE) {
 				Position newPosition = state.getRobotPos().showPositionMoving(state.getOrientation());
 				if (grid.isPositionAllowed(newPosition)) {
 					childState.setAction(a);
-					childState.setEngery(engery+a.getEngery());
+					
 					childState.setRobotPos(newPosition);
 					childState.setOrientation(state.getOrientation());
 					childState.setDirtPositions(state.getDirtPositions());
+					childState.setEngery(engery+heuristic(childState)+a.getEngery());
 					children.add(new Node(node, childState));
+					System.out.println("Action: "+a+"\tTotalCost: "+childState.getEngery());
 				}
 			} else if (a == Action.RIGHT) {
 				childState.setAction(a);
-				childState.setEngery(engery+a.getEngery());
+				
 				childState.setRobotPos(state.getRobotPos());
 				childState.setOrientation(getNewOrientation(state.getOrientation(), Action.RIGHT));
 				childState.setDirtPositions(state.getDirtPositions());
+				childState.setEngery(engery+heuristic(childState)+a.getEngery());
 				children.add(new Node(node, childState));
+				System.out.println("Action: "+a+"\tTotalCost: "+childState.getEngery());
 			} else if (a == Action.SUCK) {
 				if (grid.getDirt().contains(state.getRobotPos())) {
 					childState.setAction(a);
-					childState.setEngery(engery+a.getEngery());
+//					childState.setEngery(engery+a.getEngery());
 					childState.setRobotPos(state.getRobotPos());
 					childState.setOrientation(state.getOrientation());
 					childState.setDirtPositions(new ArrayList<>(state.getDirtPositions()));
 					childState.clean(state.getRobotPos());
+					childState.setEngery(engery+heuristic(childState)+a.getEngery());
 					children.add(new Node(node, childState));
+					System.out.println("Action: "+a+"\tTotalCost: "+childState.getEngery());
 				}
 			}
 			
 		}
+		
 		return children;
 	}
 
@@ -180,6 +190,98 @@ public class SearchMethods {
 			}
 		}
 		return next;
+	}
+	
+	private int heuristic(State current){
+		List<Position>dirts=current.getDirtPositions();
+		List<Position> distances = new ArrayList<>();
+		Position robotPosition=current.getRobotPos();
+		Orientation currentOrientation=current.getOrientation();
+		Position shortest;
+		int index=-1;
+		int numOfObs=0;
+		for(Position dirt : dirts){
+			distances.add(new Position(dirt.getX()-robotPosition.getX(),dirt.getY()-robotPosition.getY()));
+		}
+		Collections.sort(distances, Position.positionComparator);
+		for(Position dis : distances){
+			if(currentOrientation==Orientation.NORTH){
+				if(dis.getX()>=0){
+					index=distances.indexOf(dis);
+					break;
+				}
+			}
+			else if(currentOrientation==Orientation.SOUTH){
+				if(dis.getX()<=0){
+					index=distances.indexOf(dis);
+					break;
+				}
+			}
+			else if(currentOrientation==Orientation.WEST){
+				if(dis.getY()<=0){
+					index=distances.indexOf(dis);
+					break;
+				}
+			}
+			else {
+				if(dis.getY()>=0){
+					index=distances.indexOf(dis);
+					break;
+				}
+			}
+		}
+		if(dirts.isEmpty()) return 0;
+		if(index==-1){
+			shortest=distances.get(distances.size()-1);
+			
+		}
+		else{
+			shortest=distances.get(index);
+		}
+		
+		
+			
+			int i=1;
+			
+			for(int x=shortest.getX();x!=0;){
+				if(shortest.getX()>0){
+					if(!grid.isPositionAllowed(new Position(robotPosition.getX()-i,robotPosition.getY())))
+						numOfObs++;
+					x--;
+				}
+				else{
+					if(!grid.isPositionAllowed(new Position(robotPosition.getX()+i,robotPosition.getY())))
+						numOfObs++;
+					x++;
+				}
+				
+				
+			}
+			
+			for(int y=shortest.getY();y!=0;){
+				if(shortest.getY()>0){
+					if(!grid.isPositionAllowed(new Position(robotPosition.getX(),robotPosition.getY()-i)))
+						numOfObs++;
+					y--;
+				}
+				else{
+					if(!grid.isPositionAllowed(new Position(robotPosition.getX(),robotPosition.getY()+i)))
+						numOfObs++;
+					y++;
+				}
+				
+				
+			}
+			if(index==-1){
+				System.out.print("  -1numOBj : "+numOfObs+"\t"+Action.MOVE.getEngery()+"\t"+shortest.toString()+"\t"+((Math.abs(shortest.getX())+Math.abs(shortest.getY())+numOfObs)*Action.MOVE.getEngery()+5)+"\t");
+				return ((Math.abs(shortest.getX())+Math.abs(shortest.getY())+numOfObs)*Action.MOVE.getEngery()+5);
+			}
+			else{
+				System.out.print("  not-1numOBj : "+numOfObs+"\t"+Action.MOVE.getEngery()+"\t"+shortest.toString()+"\t"+((Math.abs(shortest.getX())+Math.abs(shortest.getY())+numOfObs)*Action.MOVE.getEngery())+"\t");
+			return ((Math.abs(shortest.getX())+Math.abs(shortest.getY())+numOfObs)*Action.MOVE.getEngery());
+			}
+		
+			
 	}
 
 }

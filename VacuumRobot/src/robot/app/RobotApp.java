@@ -15,10 +15,10 @@ public class RobotApp {
 	public static void main(String[] args) {
 
 
-Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2/4,2/4,3"), getPositions("1,2/2,1/3,3"),
-		new Position(3, 4), Orientation.WEST);
-//Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3"),
+//Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2/4,2/4,3"), getPositions("1,2/2,1/3,3"),
 //		new Position(3, 4), Orientation.WEST);
+Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3/4,2"),
+		new Position(3, 4), Orientation.WEST);
 
 Node solution = search(3, grid);
 
@@ -36,8 +36,10 @@ Node solution = search(3, grid);
 	 *            The node solution of the search problem.
 	 */
 	private static void printSolution(Node solution) {
+		
 		int totalCost=0;
 		if (solution != null) {
+			System.out.println();
 			Stack<Node> allNodes = new Stack<>();
 			allNodes.add(solution);
 			Node node = solution;
@@ -48,6 +50,7 @@ Node solution = search(3, grid);
 				node = node.getParent();
 			}
 			while (!allNodes.isEmpty()) {
+				
 				System.out.println(allNodes.pop().getState().toString());
 			}
 		} else {
