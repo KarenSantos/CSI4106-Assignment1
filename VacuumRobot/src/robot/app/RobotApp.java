@@ -14,28 +14,51 @@ public class RobotApp {
 
 	public static void main(String[] args) {
 
-		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/2,4/3,3"),
-				new Position(4, 3), Orientation.WEST);
-		
+		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/2,4/3,3"), new Position(4, 3),
+				Orientation.WEST);
+
 		Node solution = search(1, grid);
 
 		printSolution(solution);
 
 	}
 
+	/**
+	 * Receives a node solution for a search problem and prints the states of
+	 * that solution starting from the root node. If node solution is null
+	 * prints "No Solution".
+	 * 
+	 * @param solution
+	 *            The node solution of the search problem.
+	 */
 	private static void printSolution(Node solution) {
-		Stack<Node> allNodes = new Stack<>();
-		allNodes.add(solution);
-		Node node = solution;
-		while(node.getParent() != null){
-			allNodes.add(node.getParent());
-			node = node.getParent();
-		}
-		while(!allNodes.isEmpty()){
-			System.out.println(allNodes.pop().getState().toString());
+		if (solution != null) {
+			Stack<Node> allNodes = new Stack<>();
+			allNodes.add(solution);
+			Node node = solution;
+			while (node.getParent() != null) {
+				allNodes.add(node.getParent());
+				node = node.getParent();
+			}
+			while (!allNodes.isEmpty()) {
+				System.out.println(allNodes.pop().getState().toString());
+			}
+		} else {
+			System.out.println("No solution was found.");
 		}
 	}
 
+	/**
+	 * Generates a search for the specified grid and the specified search
+	 * method.
+	 * 
+	 * @param method
+	 *            The search method integer. 1 for Depth-first search, 2 for
+	 *            Breath-first search and 3 for A* search.
+	 * @param grid
+	 *            The grid where the search will be applied.
+	 * @return The node solution for that specified search.
+	 */
 	private static Node search(int method, Grid grid) {
 		SearchMethods search = new SearchMethods(grid);
 		Node result = null;
@@ -49,6 +72,16 @@ public class RobotApp {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param columns
+	 * @param lines
+	 * @param obstacles
+	 * @param dirt
+	 * @param startPosition
+	 * @param orientation
+	 * @return
+	 */
 	private static Grid generateGrid(int columns, int lines, List<Position> obstacles, List<Position> dirt,
 			Position startPosition, Orientation orientation) {
 		Grid grid = new Grid(columns, lines, obstacles, dirt, startPosition, orientation);
