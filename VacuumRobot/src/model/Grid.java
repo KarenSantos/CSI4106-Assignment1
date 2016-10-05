@@ -48,7 +48,6 @@ public class Grid {
 		this.freePositions = generateFreePositions();
 		this.startPosition = startPosition;
 		this.startOrientation = startOrientation;
-		// TODO maybe record start state instead of position and orientation
 	}
 
 	/**

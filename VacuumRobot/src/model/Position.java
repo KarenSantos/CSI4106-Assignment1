@@ -90,22 +90,6 @@ public class Position implements Comparable<Position> {
 		return newPosition;
 	}
 
-	public Position showWestPosition() {
-		return new Position(getX() - 1, getY());
-	}
-
-	public Position showNorthPosition() {
-		return new Position(getX(), getY() - 1);
-	}
-
-	public Position showEastPosition() {
-		return new Position(getX() + 1, getY());
-	}
-
-	public Position showSouthPosition() {
-		return new Position(getX(), getY() + 1);
-	}
-
 	/**
 	 * Returns the position as an array of 2 integers.
 	 * 
@@ -133,19 +117,19 @@ public class Position implements Comparable<Position> {
 	}
 
 
+	/**
+	 * Compares two positions by finding the different between x+y of one and x+y of the other.
+	 */
 	@Override
-// for calculating the min distance b/w robot and a dirt
 	public int compareTo(Position o) {
-		// TODO Auto-generated method stub
+		// for calculating the minimum distance between robot and dirt
 		return Math.abs(this.x)+Math.abs(this.y)-(Math.abs(o.x)+Math.abs(o.y));
 	}
+	
 	public static Comparator<Position> positionComparator
 		= new Comparator<Position>() {
-
 		public int compare(Position o1, Position o2) {
-			// TODO Auto-generated method stub
 			return o1.compareTo(o2);
-//			return o2.compareTo(o1);
 		}
 	};
 

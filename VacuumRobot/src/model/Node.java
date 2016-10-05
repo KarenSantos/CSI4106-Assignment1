@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Class node that has a depth, a parent node, and a state.
+ * Class node that has a parent node, a depth and a state.
  * 
  * @author karensaroc
  *
