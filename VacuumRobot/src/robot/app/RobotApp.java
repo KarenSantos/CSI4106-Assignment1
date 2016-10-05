@@ -9,6 +9,7 @@ import model.Node;
 import model.Orientation;
 import model.Position;
 import model.SearchMethods;
+import model.SearchSolution;
 
 public class RobotApp {
 
@@ -19,47 +20,45 @@ public class RobotApp {
 		Grid grid2 = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3/4,2"),
 				new Position(3, 4), Orientation.WEST);
 
-		Node solution = search(1, grid);
-		Node solution2 = search(3, grid2);
+		SearchSolution solution = search(1, grid);
+		SearchSolution solution2 = search(2, grid);
+		// Solution solution2 = search(3, grid2);
 
 		printSolution(solution);
-		System.out.println();
 		printSolution(solution2);
+		// printSolution(solution2);
 
 	}
 
 	/**
-	 * Receives a node solution for a search problem and prints the states of
-	 * that solution starting from the root node. If node solution is null
-	 * prints "No Solution".
+	 * Receives a solution for a search problem and prints the states of that
+	 * solution starting from the root node, and total cost, depth and time of
+	 * that solution. If node solution is null prints "No Solution".
 	 * 
 	 * @param solution
-	 *            The node solution of the search problem.
+	 *            The solution solution of the search problem.
 	 */
-	private static void printSolution(Node solution) {
-
-		int totalCost = 0;
+	private static void printSolution(SearchSolution solution) {
 		if (solution != null) {
-			System.out.println();
+			System.out.println("------ " + solution.getSearchMethod() + " ------");
 			Stack<Node> allNodes = new Stack<>();
-			allNodes.add(solution);
-			Node node = solution;
-
+			allNodes.add(solution.getSolutionNode());
+			Node node = solution.getSolutionNode();
 			while (node.getParent() != null) {
-				totalCost += node.getState().getAction().getEngery();
 				allNodes.add(node.getParent());
 				node = node.getParent();
 			}
 			while (!allNodes.isEmpty()) {
-
 				System.out.println(allNodes.pop().getState().toString());
 			}
+			System.out.println("Total cost: " + solution.getSolutionNode().getState().getEngery());
+			System.out.println("Depth: " + solution.getSolutionNode().getDepth());
+			System.out.println("Time: " + solution.getDuration() + "ms");
+			System.out.println();
 		} else {
 			System.out.println("No solution was found.");
-			return;
+			System.out.println();
 		}
-		System.out.println("total cost: " + totalCost);
-		System.out.println("depth: " + solution.getDepth());
 	}
 
 	/**
@@ -73,20 +72,22 @@ public class RobotApp {
 	 *            The grid where the search will be applied.
 	 * @return The node solution for that specified search.
 	 */
-	private static Node search(int method, Grid grid) {
+	private static SearchSolution search(int method, Grid grid) {
 		SearchMethods search = new SearchMethods(grid);
-		Node result = null;
+		SearchSolution solution = null;
 		if (method == 1) {
-			result = search.DFS();
+			solution = search.DFS();
 		} else if (method == 2) {
-			result = search.BFS();
+			solution = search.BFS();
 		} else if (method == 3) {
-			result = search.AStar();
+			solution = search.AStar();
 		}
-		return result;
+		return solution;
 	}
 
 	/**
+	 * Generates a grid with columns, lines, obstacle and dirt positions, a
+	 * start position and orientation.
 	 * 
 	 * @param columns
 	 * @param lines
