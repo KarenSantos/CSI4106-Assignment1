@@ -144,7 +144,7 @@ public class State {
 
 	@Override
 	public String toString() {
-		return "(" + action +" , "+action.getEngery()+ " , " + robotPos + ", " + orientation + ", " + getDirtPositions() + ") "+engery;
+		return "(" + action + ", " + action.getEngery() + " , " + robotPos + ", " + orientation + ", " + getDirtPositions() + ") "+engery;
 	}
 
 	@Override
