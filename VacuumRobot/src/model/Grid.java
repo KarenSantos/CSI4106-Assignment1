@@ -198,5 +198,8 @@ public class Grid {
 		}
 		return positions;
 	}
+	public int getPossibleLongestDistance(){
+		return lines+columns-1;
+	}
 
 }

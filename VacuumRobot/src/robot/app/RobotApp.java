@@ -15,18 +15,18 @@ public class RobotApp {
 
 	public static void main(String[] args) {
 
-		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2/4,2/4,3"), getPositions("1,2/2,1/3,3"),
-				new Position(3, 4), Orientation.WEST);
-		Grid grid2 = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3/4,2"),
-				new Position(3, 4), Orientation.WEST);
+		Grid grid = generateGrid(100, 100, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3/2,4"),
+				new Position(4, 3), Orientation.WEST);
+//		Grid grid2 = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3/4,2"),
+//				new Position(3, 4), Orientation.WEST);
 
 		SearchSolution solution = search(1, grid);
 		SearchSolution solution2 = search(2, grid);
-		// Solution solution2 = search(3, grid2);
+		SearchSolution solution3 = search(3, grid);
 
 		printSolution(solution);
 		printSolution(solution2);
-		// printSolution(solution2);
+		printSolution(solution3);
 
 	}
 
@@ -44,15 +44,18 @@ public class RobotApp {
 			Stack<Node> allNodes = new Stack<>();
 			allNodes.add(solution.getSolutionNode());
 			Node node = solution.getSolutionNode();
+			int totalCost=solution.getSolutionNode().getState().getAction().getEngery();
 			while (node.getParent() != null) {
 				allNodes.add(node.getParent());
 				node = node.getParent();
+				totalCost+=node.getState().getAction().getEngery();
 			}
 			while (!allNodes.isEmpty()) {
 				System.out.println(allNodes.pop().getState().toString());
 			}
-			System.out.println("Total cost: " + solution.getSolutionNode().getState().getEngery());
+			System.out.println("Total cost: " + totalCost);
 			System.out.println("Depth: " + solution.getSolutionNode().getDepth());
+			System.out.println("Branch factors: " + solution.getBranchFactor());
 			System.out.println("Time: " + solution.getDuration() + "ms");
 			System.out.println();
 		} else {
@@ -73,14 +76,16 @@ public class RobotApp {
 	 * @return The node solution for that specified search.
 	 */
 	private static SearchSolution search(int method, Grid grid) {
-		SearchMethods search = new SearchMethods(grid);
+		SearchMethods search = new SearchMethods(grid,method);
 		SearchSolution solution = null;
 		if (method == 1) {
 			solution = search.DFS();
 		} else if (method == 2) {
 			solution = search.BFS();
 		} else if (method == 3) {
+
 			solution = search.AStar();
+			
 		}
 		return solution;
 	}

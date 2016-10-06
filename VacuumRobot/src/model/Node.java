@@ -10,6 +10,7 @@ public class Node {
 
 	private Node parent;
 	private int depth;
+
 	private State state;
 
 	/**
@@ -23,6 +24,7 @@ public class Node {
 	public Node(Node parent, State state) {
 		this.parent = parent;
 		this.state = state;
+		
 		if (parent == null)
 			this.depth = 1;
 		else

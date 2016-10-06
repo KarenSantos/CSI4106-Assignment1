@@ -42,4 +42,8 @@ public enum Action {
 	public int getEngery() {
 		return engery;
 	}
+	
+	public int Normalize(){
+		return SUCK.engery+MOVE.engery+LEFT.engery+RIGHT.engery;
+	}
 }
