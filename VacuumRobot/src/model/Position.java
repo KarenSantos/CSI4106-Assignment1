@@ -74,7 +74,8 @@ public class Position implements Comparable<Position> {
 	 * 
 	 * @param orientation
 	 *            The orientation where to show the next position.
-	 * @return The position moving to the specified orientation or null if orientation not specified.
+	 * @return The position moving to the specified orientation or null if
+	 *         orientation not specified.
 	 */
 	public Position showPositionMoving(Orientation orientation) {
 		Position newPosition = null;
@@ -85,7 +86,7 @@ public class Position implements Comparable<Position> {
 		} else if (orientation == Orientation.EAST) {
 			newPosition = new Position(getX() + 1, getY());
 		} else if (orientation == Orientation.SOUTH) {
-			newPosition = new Position(getX(),getY() + 1);
+			newPosition = new Position(getX(), getY() + 1);
 		}
 		return newPosition;
 	}
@@ -103,31 +104,34 @@ public class Position implements Comparable<Position> {
 	public String toString() {
 		return "(" + x + "," + y + ")";
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		boolean result = false;
-		if (obj != null && obj instanceof Position){
+		if (obj != null && obj instanceof Position) {
 			Position p = (Position) obj;
-			if (p.getX() == this.getX() && p.getY() == this.getY()){
+			if (p.getX() == this.getX() && p.getY() == this.getY()) {
 				result = true;
 			}
 		}
 		return result;
 	}
 
-
 	/**
-	 * Compares two positions by finding the different between x+y of one and x+y of the other.
+	 * Compares two positions by finding the different between x+y of one and
+	 * x+y of the other.
 	 */
 	@Override
 	public int compareTo(Position o) {
 		// for calculating the minimum distance between robot and dirt
-		return Math.abs(this.x)+Math.abs(this.y)-(Math.abs(o.x)+Math.abs(o.y));
+		return Math.abs(this.x) + Math.abs(this.y) - (Math.abs(o.x) + Math.abs(o.y));
 	}
-	
-	public static Comparator<Position> positionComparator
-		= new Comparator<Position>() {
+
+	/**
+	 * Comparator that compares two positions by finding the different between
+	 * x+y of the first and x+y of the second.
+	 */
+	public static Comparator<Position> positionComparator = new Comparator<Position>() {
 		public int compare(Position o1, Position o2) {
 			return o1.compareTo(o2);
 		}

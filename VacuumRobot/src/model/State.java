@@ -4,7 +4,6 @@ import java.util.List;
 
 // put in the state things that can change in the problem. not the obstacles.
 //if you have a consistent heuristic your f(n) will never decrease.
-//heuristic could be going to all dirt without thinking about the obstacles.
 
 /**
  * State class that has the action taken to arrive at this state, the robot
@@ -20,13 +19,12 @@ public class State {
 	private Position robotPos;
 	private Orientation orientation;
 	private List<Position> dirtPositions;
-	private int engery;
+	private int cumulativeEnergy;
 
 	/**
-	 * Creates a state with null values and energy cost 0;
+	 * Creates a state with null values;
 	 */
 	public State() {
-		this.engery = 0;
 	}
 
 	/**
@@ -47,7 +45,9 @@ public class State {
 		this.robotPos = robotPos;
 		this.orientation = orientation;
 		this.dirtPositions = dirtPositions;
-		this.engery = 0;
+		this.cumulativeEnergy = 0;
+		// TODO remove energy, we can't have cumulative energy because the state
+		// doesn't know about previous states.
 	}
 
 	/**
@@ -75,15 +75,16 @@ public class State {
 	 * @return The energy cost at this state.
 	 */
 	public int getEngery() {
-		return engery;
+		return cumulativeEnergy;
 	}
 
 	/**
-	 * Sets the energy cost 
+	 * Sets the energy cost
+	 * 
 	 * @param engery
 	 */
 	public void setEngery(int engery) {
-		this.engery = engery;
+		this.cumulativeEnergy = engery;
 	}
 
 	/**
@@ -156,7 +157,7 @@ public class State {
 	@Override
 	public String toString() {
 		return "(" + action + ", " + action.getEngery() + " , " + robotPos + ", " + orientation + ", "
-				+ getDirtPositions() + ") " + engery;
+				+ getDirtPositions() + ") " + cumulativeEnergy;
 	}
 
 	@Override

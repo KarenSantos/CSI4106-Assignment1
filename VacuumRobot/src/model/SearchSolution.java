@@ -13,15 +13,6 @@ public class SearchSolution {
 	private Node solutionNode;
 	private long duration;
 	private long startTime;
-	private int branchFactor;
-
-	public void setBranchFactor(int branchBactor) {
-		this.branchFactor = branchBactor;
-	}
-
-	public int getBranchFactor() {
-		return branchFactor;
-	}
 
 	/**
 	 * Creates a solution with the specified search method.
@@ -32,7 +23,6 @@ public class SearchSolution {
 	public SearchSolution(String searchMethod) {
 		this.startTime = System.nanoTime();
 		this.searchMethod = searchMethod;
-		
 	}
 
 	/**

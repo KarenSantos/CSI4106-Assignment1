@@ -36,16 +36,20 @@ public class Grid {
 	 *            The start position of the robot.
 	 * @param startOrientation
 	 *            The start orientation of the robot.
+	 * @throws Exception
+	 *             If one of the positions entered is not valid in this grid.
 	 * 
 	 */
 	public Grid(int columns, int lines, List<Position> obstacles, List<Position> dirt, Position startPosition,
-			Orientation startOrientation) {
-		// TODO test if position of obstacles and dirt are part of the grid.
+			Orientation startOrientation) throws Exception {
 		this.columns = columns;
 		this.lines = lines;
+		testPositions(obstacles);
 		this.obstacles = obstacles;
+		testPositions(dirt);
 		this.dirt = dirt;
 		this.freePositions = generateFreePositions();
+		testPosition(startPosition);
 		this.startPosition = startPosition;
 		this.startOrientation = startOrientation;
 	}
@@ -64,10 +68,15 @@ public class Grid {
 	 * 
 	 * @param columns
 	 *            The new number of columns in the grid.
+	 * @throws Exception
+	 *             If the positions for the obstacles, dirt and start positions
+	 *             are not inside the new number of columns.
 	 */
-	public void setColumns(int columns) {
-		// TODO regenerate grid and do all the testing.
+	public void setColumns(int columns) throws Exception {
 		this.columns = columns;
+		testPositions(this.obstacles);
+		testPositions(this.dirt);
+		testPosition(startPosition);
 	}
 
 	/**
@@ -84,10 +93,15 @@ public class Grid {
 	 * 
 	 * @param lines
 	 *            The new number of lines in the grid.
+	 * @throws Exception
+	 *             If the positions for the obstacles, dirt and start positions
+	 *             are not inside the new number of lines.
 	 */
-	public void setLines(int lines) {
-		// TODO regenerate grid and do all the testing.
+	public void setLines(int lines) throws Exception {
 		this.lines = lines;
+		testPositions(this.obstacles);
+		testPositions(this.dirt);
+		testPosition(startPosition);
 	}
 
 	/**
@@ -104,9 +118,11 @@ public class Grid {
 	 * 
 	 * @param obstacles
 	 *            The new list of positions with obstacles in the grid.
+	 * @throws Exception
+	 *             If the new obstacles are not inside the grid specification.
 	 */
-	public void setObstacles(List<Position> obstacles) {
-		// TODO test if they are according to the grid.
+	public void setObstacles(List<Position> obstacles) throws Exception {
+		testPositions(obstacles);
 		this.obstacles = obstacles;
 	}
 
@@ -124,9 +140,12 @@ public class Grid {
 	 * 
 	 * @param dirt
 	 *            The new list of positions with dirt in the grid.
+	 * @throws Exception
+	 *             If the positions of the dirt are not inside the grid
+	 *             specifications.
 	 */
-	public void setDirt(List<Position> dirt) {
-		// TODO test if they are according to the grid.
+	public void setDirt(List<Position> dirt) throws Exception {
+		testPositions(dirt);
 		this.dirt = dirt;
 	}
 
@@ -144,9 +163,12 @@ public class Grid {
 	 * 
 	 * @param startPosition
 	 *            The new start position of the robot.
+	 * @throws Exception
+	 *             If the new start position is not inside the grid
+	 *             specifications.
 	 */
-	public void setStartPosition(Position startPosition) {
-		// TODO test if position in the grid.
+	public void setStartPosition(Position startPosition) throws Exception {
+		testPosition(startPosition);
 		this.startPosition = startPosition;
 	}
 
@@ -181,6 +203,10 @@ public class Grid {
 		return freePositions.contains(position);
 	}
 
+	public int getPossibleLongestDistance() {
+		return lines + columns - 1;
+	}
+
 	/**
 	 * Generate a list with all the positions in the grid;
 	 * 
@@ -191,15 +217,41 @@ public class Grid {
 		for (int i = 1; i <= columns; i++) {
 			for (int j = 1; j <= lines; j++) {
 				Position pos = new Position(i, j);
-				if (!getObstacles().contains(pos)){
+				if (!getObstacles().contains(pos)) {
 					positions.add(pos);
 				}
 			}
 		}
 		return positions;
 	}
-	public int getPossibleLongestDistance(){
-		return lines+columns-1;
+
+	/**
+	 * Tests if the positions in the list are inside the grid.
+	 * 
+	 * @param positions
+	 *            The list of positions.
+	 * @throws Exception
+	 *             If one of the positions is not in the grid.
+	 */
+	private void testPositions(List<Position> positions) throws Exception {
+		for (Position p : positions) {
+			if (p.getX() > getColumns() || p.getY() > getLines()) {
+				throw new Exception("This position is invalid for this grid");
+			}
+		}
 	}
 
+	/**
+	 * Tests if a position is inside the grid.
+	 * 
+	 * @param p
+	 *            The position.
+	 * @throws Exception
+	 *             If the position is not inside the grid.
+	 */
+	private void testPosition(Position p) throws Exception {
+		if (p.getX() > getColumns() || p.getY() > getLines()) {
+			throw new Exception("This position is invalid for this grid");
+		}
+	}
 }

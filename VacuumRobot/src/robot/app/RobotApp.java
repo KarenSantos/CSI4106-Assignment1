@@ -15,18 +15,20 @@ public class RobotApp {
 
 	public static void main(String[] args) {
 
-		Grid grid = generateGrid(100, 100, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3/2,4"),
-				new Position(4, 3), Orientation.WEST);
-//		Grid grid2 = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3/4,2"),
-//				new Position(3, 4), Orientation.WEST);
+		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3/2,4"), new Position(4, 3),
+				Orientation.WEST);
+		// Grid grid2 = generateGrid(4, 4, getPositions("2,2/2,3/3,2"),
+		// getPositions("1,2/2,1/3,3/4,2"),
+		// new Position(3, 4), Orientation.WEST);
 
 		SearchSolution solution = search(1, grid);
-		SearchSolution solution2 = search(2, grid);
-		SearchSolution solution3 = search(3, grid);
-
 		printSolution(solution);
-		printSolution(solution2);
-		printSolution(solution3);
+
+//		SearchSolution solution2 = search(2, grid);
+//		printSolution(solution2);
+//
+//		SearchSolution solution3 = search(3, grid);
+//		printSolution(solution3);
 
 	}
 
@@ -44,18 +46,17 @@ public class RobotApp {
 			Stack<Node> allNodes = new Stack<>();
 			allNodes.add(solution.getSolutionNode());
 			Node node = solution.getSolutionNode();
-			int totalCost=solution.getSolutionNode().getState().getAction().getEngery();
+			int totalCost = solution.getSolutionNode().getState().getAction().getEngery();
 			while (node.getParent() != null) {
 				allNodes.add(node.getParent());
 				node = node.getParent();
-				totalCost+=node.getState().getAction().getEngery();
+				totalCost += node.getState().getAction().getEngery();
 			}
 			while (!allNodes.isEmpty()) {
 				System.out.println(allNodes.pop().getState().toString());
 			}
 			System.out.println("Total cost: " + totalCost);
 			System.out.println("Depth: " + solution.getSolutionNode().getDepth());
-			System.out.println("Branch factors: " + solution.getBranchFactor());
 			System.out.println("Time: " + solution.getDuration() + "ms");
 			System.out.println();
 		} else {
@@ -76,7 +77,7 @@ public class RobotApp {
 	 * @return The node solution for that specified search.
 	 */
 	private static SearchSolution search(int method, Grid grid) {
-		SearchMethods search = new SearchMethods(grid,method);
+		SearchMethods search = new SearchMethods(grid, method);
 		SearchSolution solution = null;
 		if (method == 1) {
 			solution = search.DFS();
@@ -85,7 +86,7 @@ public class RobotApp {
 		} else if (method == 3) {
 
 			solution = search.AStar();
-			
+
 		}
 		return solution;
 	}
@@ -95,16 +96,27 @@ public class RobotApp {
 	 * start position and orientation.
 	 * 
 	 * @param columns
+	 *            The number of columns on the grid.
 	 * @param lines
+	 *            The number of lines on the grid.
 	 * @param obstacles
+	 *            The list with the positions of all obstacles.
 	 * @param dirt
+	 *            The list with the positions of all dirt.
 	 * @param startPosition
+	 *            The start position of the robot.
 	 * @param orientation
-	 * @return
+	 *            The start orientation of the robot.
+	 * @return Returns the grid generated.
 	 */
 	private static Grid generateGrid(int columns, int lines, List<Position> obstacles, List<Position> dirt,
 			Position startPosition, Orientation orientation) {
-		Grid grid = new Grid(columns, lines, obstacles, dirt, startPosition, orientation);
+		Grid grid = null;
+		try {
+			grid = new Grid(columns, lines, obstacles, dirt, startPosition, orientation);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return grid;
 	}
 

@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,25 +19,22 @@ public class SearchMethods {
 	private final String DFS = "Depth-first Search";
 	private final String BFS = "Breadth-first Search";
 	private final String AStar = "A* Search";
-	private int branchFactor=0;
 	private Grid grid;
 	private Node startNode;
-	
-
-	private Fcost cost;
+	private CostFunction costFunction;
 
 	/**
-	 * Creates a search method with a specified grid.
+	 * Creates a search method with a specified grid, a start state, a start
+	 * node and a cost function.
 	 * 
 	 * @param grid
 	 *            The grid to execute the search method.
 	 */
-	public SearchMethods(Grid grid,int method) {
+	public SearchMethods(Grid grid, int method) {
 		this.grid = grid;
 		State startState = new State(Action.START, grid.getStartPosition(), grid.getStartOrientation(), grid.getDirt());
-		startNode = new Node(null, startState);
-
-		cost=new Fcost(grid,method);
+		this.startNode = new Node(null, startState);
+		this.costFunction = new CostFunction(grid, method);
 	}
 
 	/**
@@ -48,14 +44,13 @@ public class SearchMethods {
 	 * @return A search solution using Depth-first search method.
 	 */
 	public SearchSolution DFS() {
-		
+
 		SearchSolution solution = new SearchSolution(DFS);
 		List<Node> closed = new ArrayList<>();
 		Stack<Node> fringe = new Stack<Node>();
 		fringe.push(startNode);
 		while (!fringe.isEmpty()) {
 			Node currentNode = fringe.pop();
-			branchFactor++;
 
 			if (currentNode.getState().getDirtPositions().isEmpty()) {
 				solution.setSolutionNode(currentNode);
@@ -67,12 +62,11 @@ public class SearchMethods {
 				for (Node n : children) {
 					if (!closed.contains(n) && !fringe.contains(n)) {
 						fringe.add(n);
-						
+
 					}
 				}
 			}
 		}
-		solution.setBranchFactor(branchFactor);
 		return solution;
 	}
 
@@ -83,7 +77,7 @@ public class SearchMethods {
 	 * @return A search solution using Breadth-first search method.
 	 */
 	public SearchSolution BFS() {
-		
+
 		SearchSolution solution = new SearchSolution(BFS);
 		Queue<Node> fringe = new LinkedList<Node>();
 		List<Node> closed = new ArrayList<>();
@@ -91,7 +85,6 @@ public class SearchMethods {
 
 		while (!fringe.isEmpty()) {
 			Node currentNode = fringe.poll();
-			branchFactor++;
 			if (currentNode.getState().getDirtPositions().isEmpty()) {
 				solution.setSolutionNode(currentNode);
 				break;
@@ -105,7 +98,6 @@ public class SearchMethods {
 				}
 			}
 		}
-		solution.setBranchFactor(branchFactor);
 		return solution;
 	}
 
@@ -116,7 +108,7 @@ public class SearchMethods {
 	 * @return A search solution using A* search method.
 	 */
 	public SearchSolution AStar() {
-		
+
 		SearchSolution solution = new SearchSolution(AStar);
 		List<Node> closed = new ArrayList<>();
 		Queue<Node> fringe = new PriorityQueue<Node>(10, new Comparator<Node>() {
@@ -131,9 +123,6 @@ public class SearchMethods {
 		fringe.offer(startNode);
 		while (!fringe.isEmpty()) {
 			Node currentNode = fringe.poll();
-			branchFactor++;
-//			System.out.println(currentNode.getState().toString() + "\t" + currentNode.getState().getEngery());
-
 			if (currentNode.getState().getDirtPositions().isEmpty()) {
 				solution.setSolutionNode(currentNode);
 				break;
@@ -147,7 +136,6 @@ public class SearchMethods {
 				}
 			}
 		}
-		solution.setBranchFactor(branchFactor);
 		return solution;
 	}
 
@@ -162,21 +150,20 @@ public class SearchMethods {
 	private List<Node> getSuccessorsDFS(Node node) {
 		List<Node> children = new ArrayList<>();
 		State state = node.getState();
-		
-		cost.setParentCost(node.getState().getEngery());
+
+		costFunction.setParentCost(node.getState().getEngery());
 		List<Action> actions = Action.getActions();
 		for (Action a : actions) {
 			State childState = new State();
-			 
-			
+
 			if (a == Action.LEFT) {
 
 				childState.setAction(a);
 				childState.setRobotPos(state.getRobotPos());
 				childState.setOrientation(getNewOrientation(state.getOrientation(), Action.LEFT));
 				childState.setDirtPositions(state.getDirtPositions());
-				cost.setState(childState);
-				childState.setEngery(cost.getCost());
+				costFunction.setState(childState);
+				childState.setEngery(costFunction.getCost());
 				children.add(new Node(node, childState));
 				// System.out.println("Action: " + a + "\tTotalCost: " +
 				// childState.getEngery());
@@ -189,8 +176,8 @@ public class SearchMethods {
 					childState.setRobotPos(newPosition);
 					childState.setOrientation(state.getOrientation());
 					childState.setDirtPositions(state.getDirtPositions());
-					cost.setState(childState);
-					childState.setEngery(cost.getCost());
+					costFunction.setState(childState);
+					childState.setEngery(costFunction.getCost());
 					children.add(new Node(node, childState));
 					// System.out.println("Action: " + a + "\tTotalCost: " +
 					// childState.getEngery());
@@ -201,8 +188,8 @@ public class SearchMethods {
 				childState.setRobotPos(state.getRobotPos());
 				childState.setOrientation(getNewOrientation(state.getOrientation(), Action.RIGHT));
 				childState.setDirtPositions(state.getDirtPositions());
-				cost.setState(childState);
-				childState.setEngery(cost.getCost());
+				costFunction.setState(childState);
+				childState.setEngery(costFunction.getCost());
 				children.add(new Node(node, childState));
 				// System.out.println("Action: " + a + "\tTotalCost: " +
 				// childState.getEngery());
@@ -214,8 +201,8 @@ public class SearchMethods {
 					childState.setOrientation(state.getOrientation());
 					childState.setDirtPositions(new ArrayList<Position>(state.getDirtPositions()));
 					childState.clean(state.getRobotPos());
-					cost.setState(childState);
-					childState.setEngery(cost.getCost());
+					costFunction.setState(childState);
+					childState.setEngery(costFunction.getCost());
 					children.add(new Node(node, childState));
 					// System.out.println("Action: " + a + "\tTotalCost: " +
 					// childState.getEngery());
@@ -261,6 +248,4 @@ public class SearchMethods {
 		return next;
 	}
 
-	
-	
 }
