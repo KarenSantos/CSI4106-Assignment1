@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -32,8 +31,8 @@ public class SearchMethods {
 	 */
 	public SearchMethods(Grid grid, int method) {
 		this.grid = grid;
-		State startState = new State(Action.START, grid.getStartPosition(), grid.getStartOrientation(), grid.getDirt());
-		this.startNode = new Node(null, startState);
+		State startState = new State(grid.getStartPosition(), grid.getStartOrientation(), grid.getDirt());
+		this.startNode = new Node(null, startState, Action.START);
 		this.costFunction = new CostFunction(grid, method);
 	}
 
@@ -111,15 +110,7 @@ public class SearchMethods {
 
 		SearchSolution solution = new SearchSolution(AStar);
 		List<Node> closed = new ArrayList<>();
-		Queue<Node> fringe = new PriorityQueue<Node>(10, new Comparator<Node>() {
-			public int compare(Node n1, Node n2) {
-				if (n1.getState().getEngery() <= n2.getState().getEngery())
-					return -1;
-				return 1;
-
-			}
-		});
-
+		Queue<Node> fringe = new PriorityQueue<Node>();
 		fringe.offer(startNode);
 		while (!fringe.isEmpty()) {
 			Node currentNode = fringe.poll();
@@ -132,7 +123,6 @@ public class SearchMethods {
 				for (Node n : children) {
 					if (!closed.contains(n))
 						fringe.offer(n);
-
 				}
 			}
 		}
@@ -151,61 +141,49 @@ public class SearchMethods {
 		List<Node> children = new ArrayList<>();
 		State state = node.getState();
 
-		costFunction.setParentCost(node.getState().getEngery());
+//		costFunction.setParentCost(node.getAction().getEngery());
 		List<Action> actions = Action.getActions();
 		for (Action a : actions) {
 			State childState = new State();
 
 			if (a == Action.LEFT) {
 
-				childState.setAction(a);
 				childState.setRobotPos(state.getRobotPos());
 				childState.setOrientation(getNewOrientation(state.getOrientation(), Action.LEFT));
 				childState.setDirtPositions(state.getDirtPositions());
-				costFunction.setState(childState);
-				childState.setEngery(costFunction.getCost());
-				children.add(new Node(node, childState));
-				// System.out.println("Action: " + a + "\tTotalCost: " +
-				// childState.getEngery());
+				Node childNode = new Node(node, childState, a);
+				costFunction.setFunctionCost(childNode);
+				children.add(childNode);
 
 			} else if (a == Action.MOVE) {
 				Position newPosition = state.getRobotPos().showPositionMoving(state.getOrientation());
 				if (grid.isPositionAllowed(newPosition)) {
-					childState.setAction(a);
 
 					childState.setRobotPos(newPosition);
 					childState.setOrientation(state.getOrientation());
 					childState.setDirtPositions(state.getDirtPositions());
-					costFunction.setState(childState);
-					childState.setEngery(costFunction.getCost());
-					children.add(new Node(node, childState));
-					// System.out.println("Action: " + a + "\tTotalCost: " +
-					// childState.getEngery());
+					Node childNode = new Node(node, childState, a);
+					costFunction.setFunctionCost(childNode);
+					children.add(childNode);
 				}
 			} else if (a == Action.RIGHT) {
-				childState.setAction(a);
 
 				childState.setRobotPos(state.getRobotPos());
 				childState.setOrientation(getNewOrientation(state.getOrientation(), Action.RIGHT));
 				childState.setDirtPositions(state.getDirtPositions());
-				costFunction.setState(childState);
-				childState.setEngery(costFunction.getCost());
-				children.add(new Node(node, childState));
-				// System.out.println("Action: " + a + "\tTotalCost: " +
-				// childState.getEngery());
+				Node childNode = new Node(node, childState, a);
+				costFunction.setFunctionCost(childNode);
+				children.add(childNode);
 
 			} else if (a == Action.SUCK) {
 				if (grid.getDirt().contains(state.getRobotPos())) {
-					childState.setAction(a);
 					childState.setRobotPos(state.getRobotPos());
 					childState.setOrientation(state.getOrientation());
 					childState.setDirtPositions(new ArrayList<Position>(state.getDirtPositions()));
 					childState.clean(state.getRobotPos());
-					costFunction.setState(childState);
-					childState.setEngery(costFunction.getCost());
-					children.add(new Node(node, childState));
-					// System.out.println("Action: " + a + "\tTotalCost: " +
-					// childState.getEngery());
+					Node childNode = new Node(node, childState, a);
+					costFunction.setFunctionCost(childNode);
+					children.add(childNode);
 				}
 			}
 		}

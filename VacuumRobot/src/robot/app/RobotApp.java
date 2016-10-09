@@ -21,11 +21,11 @@ public class RobotApp {
 		// getPositions("1,2/2,1/3,3/4,2"),
 		// new Position(3, 4), Orientation.WEST);
 
-		SearchSolution solution = search(1, grid);
-		printSolution(solution);
+//		SearchSolution solution = search(1, grid);
+//		printSolution(solution);
 
-//		SearchSolution solution2 = search(2, grid);
-//		printSolution(solution2);
+		SearchSolution solution2 = search(2, grid);
+		printSolution(solution2);
 //
 //		SearchSolution solution3 = search(3, grid);
 //		printSolution(solution3);
@@ -46,16 +46,15 @@ public class RobotApp {
 			Stack<Node> allNodes = new Stack<>();
 			allNodes.add(solution.getSolutionNode());
 			Node node = solution.getSolutionNode();
-			int totalCost = solution.getSolutionNode().getState().getAction().getEngery();
 			while (node.getParent() != null) {
 				allNodes.add(node.getParent());
 				node = node.getParent();
-				totalCost += node.getState().getAction().getEngery();
 			}
 			while (!allNodes.isEmpty()) {
-				System.out.println(allNodes.pop().getState().toString());
+				Node n = allNodes.pop();
+				System.out.println(n.toString());
 			}
-			System.out.println("Total cost: " + totalCost);
+			System.out.println("Total cost: " + solution.getSolutionNode().getCumulativeCost());
 			System.out.println("Depth: " + solution.getSolutionNode().getDepth());
 			System.out.println("Time: " + solution.getDuration() + "ms");
 			System.out.println();

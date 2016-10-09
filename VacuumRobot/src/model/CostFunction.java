@@ -8,38 +8,18 @@ public class CostFunction {
 	private State current;
 
 	private int searchMethod;
-	private int cost;
 	private Grid grid;
-	private int parentCost;
 
 	public CostFunction(Grid grid, int searchMehod) {
-
 		this.searchMethod = searchMehod;
-		this.cost = 0;
 		this.grid = grid;
-
 	}
 
-	public void setParentCost(int parentCost) {
-		this.parentCost = parentCost;
-
-	}
-
-	public void setState(State state) {
-		this.current = state;
-	}
-
-	public int getCost() {
+	// TODO documentation
+	public void setFunctionCost(Node currentNode) {
 		if (searchMethod == 3) {
-			cost = heuristicCost() + current.getAction().getEngery();
-		} else {
-			cost = cumulativeCost();
+			currentNode.setFunctionCost(currentNode.getCumulativeCost() + heuristicCost());
 		}
-		return cost;
-	}
-
-	public int cumulativeCost() {
-		return parentCost + current.getAction().getEngery();
 	}
 
 	/**

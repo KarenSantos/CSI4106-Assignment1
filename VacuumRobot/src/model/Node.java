@@ -6,38 +6,32 @@ package model;
  * @author karensaroc
  *
  */
-public class Node {
+public class Node implements Comparable<Node> {
 
 	private Node parent;
 	private int depth;
-
 	private State state;
+	private Action action;
+	private int cumulativeCost;
+	private int functionCost;
 
 	/**
-	 * Creates a node with a parent node, a depth, and a state.
+	 * Creates a node with a parent node, a depth, a state, and a cumulative
+	 * cost from the parent node and the action energy.
 	 * 
 	 * @param parent
 	 *            The parent node. If null node is a root node.
 	 * @param state
 	 *            The state of the node.
+	 * @param action
+	 *            The action taken to get to this node.
 	 */
-	public Node(Node parent, State state) {
+	public Node(Node parent, State state, Action action) {
 		this.parent = parent;
 		this.state = state;
-		
-		if (parent == null)
-			this.depth = 1;
-		else
-			this.depth = parent.getDepth() + 1;
-	}
-
-	/**
-	 * Returns the depth of the node.
-	 * 
-	 * @return The depth of the node.
-	 */
-	public int getDepth() {
-		return depth;
+		this.action = action;
+		this.functionCost = 0;
+		setParent(parent);
 	}
 
 	/**
@@ -56,8 +50,22 @@ public class Node {
 	 *            The new parent node.
 	 */
 	public void setParent(Node parent) {
-		this.parent = parent;
-		this.depth = parent.getDepth() + 1;
+		if (parent == null) {
+			this.depth = 1;
+			this.cumulativeCost = 0;
+		} else {
+			this.depth = parent.getDepth() + 1;
+			this.cumulativeCost = parent.getCumulativeCost() + action.getEngery();
+		}
+	}
+
+	/**
+	 * Returns the depth of the node.
+	 * 
+	 * @return The depth of the node.
+	 */
+	public int getDepth() {
+		return depth;
 	}
 
 	/**
@@ -78,17 +86,71 @@ public class Node {
 	public void setState(State state) {
 		this.state = state;
 	}
+
+	/**
+	 * Returns the action taken on the previous state to get to the current
+	 * state.
+	 * 
+	 * @return The action taken on the previous state to get to the current
+	 *         state.
+	 */
+	public Action getAction() {
+		return action;
+	}
+
+	/**
+	 * Sets the action taken on the previous state to get to the current state.
+	 * 
+	 * @param action
+	 *            The action taken on the previous state to get to the current
+	 *            state.
+	 */
+	public void setAction(Action action) {
+		this.action = action;
+	}
+
+	/**
+	 * Returns the cumulative cost from the root until this node.
+	 * 
+	 * @return The cumulative cost from the root until this node.
+	 */
+	public int getCumulativeCost() {
+		return cumulativeCost;
+	}
 	
+	
+	// TODO documentation
+	public int getFunctionCost() {
+		return functionCost;
+	}
+
+	public void setFunctionCost(int functionCost) {
+		this.functionCost = functionCost;
+	}
+
+	@Override
+	public String toString() {
+		return state.toString() + ", " + this.action;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		boolean result = false;
-		if (obj != null && obj instanceof Node){
+		if (obj != null && obj instanceof Node) {
 			Node n = (Node) obj;
-			if (n.getState().equals(this.getState())){
+			if (n.getState().equals(this.getState())) {
 				result = true;
 			}
 		}
 		return result;
 	}
 
+	@Override
+	public int compareTo(Node o) {
+		if (this.getFunctionCost() <= o.getFunctionCost()){
+			return -1;
+		} else {
+			return 1;			
+		}
+	}
 }

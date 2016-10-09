@@ -15,11 +15,9 @@ import java.util.List;
  */
 public class State {
 
-	private Action action;
 	private Position robotPos;
 	private Orientation orientation;
 	private List<Position> dirtPositions;
-	private int cumulativeEnergy;
 
 	/**
 	 * Creates a state with null values;
@@ -31,8 +29,6 @@ public class State {
 	 * Creates a state with the action taken to arrive at this state, and the
 	 * robot position and orientation after that action.
 	 * 
-	 * @param action
-	 *            The action taken to arrive at this state.
 	 * @param robotPos
 	 *            The position of the robot after the action.
 	 * @param orientation
@@ -40,51 +36,10 @@ public class State {
 	 * @param dirtPositions
 	 *            The list with the positions of dirt left to clean.
 	 */
-	public State(Action action, Position robotPos, Orientation orientation, List<Position> dirtPositions) {
-		this.action = action;
+	public State(Position robotPos, Orientation orientation, List<Position> dirtPositions) {
 		this.robotPos = robotPos;
 		this.orientation = orientation;
 		this.dirtPositions = dirtPositions;
-		this.cumulativeEnergy = 0;
-		// TODO remove energy, we can't have cumulative energy because the state
-		// doesn't know about previous states.
-	}
-
-	/**
-	 * Returns the action taken to arrive at this state.
-	 * 
-	 * @return The action taken to arrive at this state.
-	 */
-	public Action getAction() {
-		return action;
-	}
-
-	/**
-	 * Sets the action taken to arrive at this state.
-	 * 
-	 * @param action
-	 *            The action taken to arrive at this state.
-	 */
-	public void setAction(Action action) {
-		this.action = action;
-	}
-
-	/**
-	 * Returns the energy cost at this state.
-	 * 
-	 * @return The energy cost at this state.
-	 */
-	public int getEngery() {
-		return cumulativeEnergy;
-	}
-
-	/**
-	 * Sets the energy cost
-	 * 
-	 * @param engery
-	 */
-	public void setEngery(int engery) {
-		this.cumulativeEnergy = engery;
 	}
 
 	/**
@@ -156,8 +111,7 @@ public class State {
 
 	@Override
 	public String toString() {
-		return "(" + action + ", " + action.getEngery() + " , " + robotPos + ", " + orientation + ", "
-				+ getDirtPositions() + ") " + cumulativeEnergy;
+		return robotPos + ", " + orientation;
 	}
 
 	@Override
