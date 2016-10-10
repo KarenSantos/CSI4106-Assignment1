@@ -1,8 +1,8 @@
 package model;
 
 /**
- * Creates a search solution with the specified search method, a solution node
- * and a time durantion for that solution.
+ * Creates a search solution with the specified search method, a solution node,
+ * a maximum depth, and a time duration for that solution.
  * 
  * @author karensaroc
  *
@@ -13,6 +13,7 @@ public class SearchSolution {
 	private Node solutionNode;
 	private long duration;
 	private long startTime;
+	private int maxDepth;
 
 	/**
 	 * Creates a solution with the specified search method.
@@ -62,5 +63,25 @@ public class SearchSolution {
 	 */
 	public long getDuration() {
 		return duration;
+	}
+
+	/**
+	 * Returns the max depth reached to find this solution.
+	 * 
+	 * @return The max depth reached to find this solution.
+	 */
+	public int getMaxDepth() {
+		return maxDepth;
+	}
+
+	/**
+	 * Sets the new max depth if the new one is greater than the current one.
+	 * 
+	 * @param maxDepth
+	 *            The new max depth.
+	 */
+	public void setMaxDepth(int maxDepth) {
+		if (this.maxDepth < maxDepth)
+			this.maxDepth = maxDepth;
 	}
 }

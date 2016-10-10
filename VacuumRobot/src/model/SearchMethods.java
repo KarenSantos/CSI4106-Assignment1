@@ -50,9 +50,10 @@ public class SearchMethods {
 		List<Node> closed = new ArrayList<>();
 		Stack<Node> fringe = new Stack<Node>();
 		fringe.push(startNode);
-		
+		solution.setMaxDepth(startNode.getDepth());
 		while (!fringe.isEmpty()) {
 			Node currentNode = fringe.pop();
+			solution.setMaxDepth(currentNode.getDepth());
 			if (currentNode.getState().getDirtPositions().isEmpty()) {
 				solution.setSolutionNode(currentNode);
 				break;
@@ -81,9 +82,10 @@ public class SearchMethods {
 		Queue<Node> fringe = new LinkedList<Node>();
 		List<Node> closed = new ArrayList<>();
 		fringe.offer(startNode);
-
+		solution.setMaxDepth(startNode.getDepth());
 		while (!fringe.isEmpty()) {
 			Node currentNode = fringe.poll();
+			solution.setMaxDepth(currentNode.getDepth());
 			if (currentNode.getState().getDirtPositions().isEmpty()) {
 				solution.setSolutionNode(currentNode);
 				break;
@@ -110,9 +112,11 @@ public class SearchMethods {
 		this.isAStar = true;
 		SearchSolution solution = new SearchSolution(AStar);
 		Queue<Node> fringe = new PriorityQueue<Node>();
-		fringe.offer(startNode);		
+		fringe.offer(startNode);
+		solution.setMaxDepth(startNode.getDepth());
 		while (!fringe.isEmpty()) {
 			Node currentNode = fringe.poll();
+			solution.setMaxDepth(currentNode.getDepth());
 			if (currentNode.getState().getDirtPositions().isEmpty()) {
 				solution.setSolutionNode(currentNode);
 				break;
@@ -143,14 +147,17 @@ public class SearchMethods {
 		for (Action a : actions) {
 			State childState = new State();
 
-			if (a == Action.LEFT) {
-				childState.setRobotPos(state.getRobotPos());
-				childState.setOrientation(getNewOrientation(state.getOrientation(), Action.LEFT));
-				childState.setDirtPositions(state.getDirtPositions());
-				Node childNode = new Node(node, childState, a);
-				if (isAStar) costFunction.setFunctionCost(childNode);
-				children.add(childNode);
-
+			if (a == Action.SUCK) {
+				if (state.isDirty()) {
+					childState.setRobotPos(state.getRobotPos());
+					childState.setOrientation(state.getOrientation());
+					childState.setDirtPositions(new ArrayList<Position>(state.getDirtPositions()));
+					childState.clean(state.getRobotPos());
+					Node childNode = new Node(node, childState, a);
+					if (isAStar)
+						costFunction.setFunctionCost(childNode);
+					children.add(childNode);
+				}
 			} else if (a == Action.MOVE) {
 				Position newPosition = state.getRobotPos().showPositionMoving(state.getOrientation());
 				if (grid.isPositionAllowed(newPosition)) {
@@ -158,27 +165,27 @@ public class SearchMethods {
 					childState.setOrientation(state.getOrientation());
 					childState.setDirtPositions(state.getDirtPositions());
 					Node childNode = new Node(node, childState, a);
-					if (isAStar) costFunction.setFunctionCost(childNode);
+					if (isAStar)
+						costFunction.setFunctionCost(childNode);
 					children.add(childNode);
 				}
+			} else if (a == Action.LEFT) {
+				childState.setRobotPos(state.getRobotPos());
+				childState.setOrientation(getNewOrientation(state.getOrientation(), Action.LEFT));
+				childState.setDirtPositions(state.getDirtPositions());
+				Node childNode = new Node(node, childState, a);
+				if (isAStar)
+					costFunction.setFunctionCost(childNode);
+				children.add(childNode);
+				
 			} else if (a == Action.RIGHT) {
 				childState.setRobotPos(state.getRobotPos());
 				childState.setOrientation(getNewOrientation(state.getOrientation(), Action.RIGHT));
 				childState.setDirtPositions(state.getDirtPositions());
 				Node childNode = new Node(node, childState, a);
-				if (isAStar) costFunction.setFunctionCost(childNode);
+				if (isAStar)
+					costFunction.setFunctionCost(childNode);
 				children.add(childNode);
-
-			} else if (a == Action.SUCK) {
-				if (grid.getDirt().contains(state.getRobotPos())) {
-					childState.setRobotPos(state.getRobotPos());
-					childState.setOrientation(state.getOrientation());
-					childState.setDirtPositions(new ArrayList<Position>(state.getDirtPositions()));
-					childState.clean(state.getRobotPos());
-					Node childNode = new Node(node, childState, a);
-					if (isAStar) costFunction.setFunctionCost(childNode);
-					children.add(childNode);
-				}
 			}
 		}
 		return children;

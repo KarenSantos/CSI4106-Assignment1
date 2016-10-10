@@ -1,7 +1,8 @@
 package model;
 
 /**
- * Class node that has a parent node, a depth and a state.
+ * Class node that has a parent node, a depth, a state, an action, a cumulative
+ * cost and a function cost.
  * 
  * @author karensaroc
  *
@@ -16,8 +17,9 @@ public class Node implements Comparable<Node> {
 	private int functionCost;
 
 	/**
-	 * Creates a node with a parent node, a depth, a state, and a cumulative
-	 * cost from the parent node and the action energy.
+	 * Creates a node with a parent node, a depth, a state, an action, and a
+	 * cumulative cost from the parent node plus the action energy. The function
+	 * cost is initialized as zero.
 	 * 
 	 * @param parent
 	 *            The parent node. If null node is a root node.
@@ -44,7 +46,8 @@ public class Node implements Comparable<Node> {
 	}
 
 	/**
-	 * Sets the parent node of this node.
+	 * Sets the parent node of this node, updating the depth and cumulative cost
+	 * accordingly.
 	 * 
 	 * @param parent
 	 *            The new parent node.
@@ -137,11 +140,17 @@ public class Node implements Comparable<Node> {
 		this.functionCost = functionCost;
 	}
 
+	/**
+	 * Returns a string with the state and the action of the node.
+	 */
 	@Override
 	public String toString() {
 		return state.toString() + ", " + this.action;
 	}
 
+	/**
+	 * Two nodes are equal if they have the same state.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		boolean result = false;

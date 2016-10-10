@@ -4,10 +4,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Class that receives a grid and can calculate the evaluation function cost for
+ * a specified node and a search method. In this case the A* method.
+ * 
+ * @author karensaroc
+ *
+ */
 public class CostFunction {
 
 	private Grid grid;
 
+	/**
+	 * Creates a cost function with a specified grid.
+	 * 
+	 * @param grid
+	 *            The grid of the cost function.
+	 */
 	public CostFunction(Grid grid) {
 		this.grid = grid;
 	}
@@ -19,26 +32,20 @@ public class CostFunction {
 	 * @param currentNode
 	 */
 	public void setFunctionCost(Node currentNode) {
-		currentNode.setFunctionCost(currentNode.getCumulativeCost() + heuristicCost(currentNode));
+		currentNode.setFunctionCost(currentNode.getCumulativeCost() + hcost1(currentNode));
 	}
 
 	/**
-	 * Calculates the heuristic cost to be used for the A* search method in a
-	 * current state
+	 * Returns the heuristic cost.
 	 * 
-	 * @return The cost value of the heuristic.
-	 * 
-	 * 
-	 *         notice: there's one case that is not considered on this method:
-	 *         when we have more than one equal shortest distances(paths), it
-	 *         does not compare/find the min cost with (min # of obstacles) when
-	 *         this is the case, the corresponding node(path) will eventually be
-	 *         dequeued among the children nodes form the fringe.
+	 * @param current
+	 *            The current node.
+	 * @return The heuristic cost.
 	 */
-	public int heuristicCost(Node current) {
+	public int hcost1(Node current) {
 		int herutisticCost;
 		Position robotPosition = current.getState().getRobotPos();
-		Orientation currentOrientation = current.getState().getOrientation();
+		// Orientation currentOrientation = current.getState().getOrientation();
 
 		// deal with special 2 cases
 		if (current.getState().getDirtPositions().isEmpty()) {
@@ -47,164 +54,54 @@ public class CostFunction {
 			herutisticCost = 0;
 		}
 
-		// calculate possible shortest distance as well as # of obstacles in
-		// between
-
 		else {
 			List<Position> dirts = current.getState().getDirtPositions();
 			List<Position> distances = new ArrayList<>();
-
-			Position shortest;
-			int factor = current.getAction().Normalize();
-
-			int index = -1;
-			int numOfObs = 0;
-			int offset;
 
 			for (Position dirt : dirts) {
 				distances.add(new Position(dirt.getX() - robotPosition.getX(), dirt.getY() - robotPosition.getY()));
 			}
 			Collections.sort(distances, Position.positionComparator);
-
-			for (Position dis : distances) {
-				if (currentOrientation == Orientation.WEST) {
-
-					if (dis.getX() <= 0) {
-						if (current.getAction() != Action.MOVE) {
-							if (dis.getX() == 0)
-								continue;
-						}
-						index = distances.indexOf(dis);// for shortest distance
-
-						// for possible obstacles in between based on the
-						// robot's direction
-						for (int x = robotPosition.getX(); x != robotPosition.getX() + dis.getX(); x--) {
-							if (!grid.isPositionAllowed(new Position(x, robotPosition.getY())))
-								numOfObs++;
-						}
-						if (dis.getY() == 0)
-							offset = 0;
-						else if (dis.getY() < 0)
-							offset = -1;
-						else
-							offset = 1;
-						for (int y = robotPosition.getY() + offset; y != robotPosition.getY()
-								+ dis.getY(); y += offset) {
-
-							if (!grid.isPositionAllowed(new Position(robotPosition.getX() + dis.getX(), y)))
-								numOfObs++;
-						}
-
-						break;
-					}
-				} else if (currentOrientation == Orientation.EAST) {
-					if (dis.getX() >= 0) {
-						if (current.getAction() != Action.MOVE) {
-							if (dis.getX() == 0)
-								continue;
-						}
-						index = distances.indexOf(dis);
-
-						for (int x = robotPosition.getX(); x != robotPosition.getX() + dis.getX(); x++) {
-							if (!grid.isPositionAllowed(new Position(x, robotPosition.getY())))
-								numOfObs++;
-						}
-						if (dis.getY() == 0)
-							offset = 0;
-						else if (dis.getY() < 0)
-							offset = -1;
-						else
-							offset = 1;
-						for (int y = robotPosition.getY() + offset; y != robotPosition.getY()
-								+ dis.getY(); y += offset) {
-
-							if (!grid.isPositionAllowed(new Position(robotPosition.getX() + dis.getX(), y)))
-								numOfObs++;
-						}
-
-						break;
-					}
-				} else if (currentOrientation == Orientation.NORTH) {
-					if (dis.getY() <= 0) {
-						if (current.getAction() != Action.MOVE) {
-							if (dis.getY() == 0)
-								continue;
-						}
-						index = distances.indexOf(dis);
-
-						for (int y = robotPosition.getY(); y != robotPosition.getY() + dis.getY(); y--) {
-
-							if (!grid.isPositionAllowed(new Position(robotPosition.getX(), y)))
-								numOfObs++;
-						}
-						if (dis.getX() == 0)
-							offset = 0;
-						else if (dis.getX() < 0)
-							offset = -1;
-						else
-							offset = 1;
-						for (int x = robotPosition.getX() + offset; x != robotPosition.getX()
-								+ dis.getX(); x += +offset) {
-							if (!grid.isPositionAllowed(new Position(x, robotPosition.getY() + dis.getY())))
-								numOfObs++;
-						}
-
-						break;
-					}
-				} else {
-					if (dis.getY() >= 0) {
-						if (current.getAction() != Action.MOVE) {
-							if (dis.getY() == 0)
-								continue;
-						}
-						index = distances.indexOf(dis);
-
-						for (int y = robotPosition.getY(); y != robotPosition.getY() + dis.getY(); y++) {
-
-							if (!grid.isPositionAllowed(new Position(robotPosition.getX(), y)))
-								numOfObs++;
-						}
-						if (dis.getX() == 0)
-							offset = 0;
-						else if (dis.getX() < 0)
-							offset = -1;
-						else
-							offset = 1;
-						for (int x = robotPosition.getX() + offset; x != robotPosition.getX()
-								+ dis.getX(); x += +offset) {
-							if (!grid.isPositionAllowed(new Position(x, robotPosition.getY() + dis.getY())))
-								numOfObs++;
-						}
-
-						break;
-					}
-				}
-			}
-			if (index == -1) {
-				// upper bound of the ((cost of (distance + # of obstacles))* #
-				// of dirts)*factors
-
-				herutisticCost = ((grid.getPossibleLongestDistance() + 3 * grid.getObstacles().size())
-						* current.getState().getDirtPositions().size()) * factor;
-
-				// System.out.println(" -1numOBj :
-				// "+numOfObs+"\t"+robotPosition.toString()+"\t"+(herutisticCost+current.getAction().getEngery())+"\t"+currentOrientation+"\t"+current.getAction());
-
-			} else {
-
-				shortest = distances.get(index);
-				// upper bound of the ((cost of (distance + # of obstacles))* #
-				// of dirts)*factors
-				herutisticCost = ((Math.abs(shortest.getX()) + Math.abs(shortest.getY()) + 3 * numOfObs)
-						* current.getState().getDirtPositions().size()) * factor;
-				// System.out.println(" NOT-1numOBj :
-				// "+numOfObs+"\t"+robotPosition.toString()+"\t"+shortest.toString()+"\t"+(herutisticCost+current.getAction().getEngery())+"\t"+currentOrientation+"\t"+current.getAction());
-
-			}
+			Position dis = distances.get(0);
+			herutisticCost = Math.max(Math.abs(dis.getX()), Math.abs(dis.getY()));
 		}
 
 		return herutisticCost;
 
 	}
 
+	/**
+	 * Calculates the heuristic cost to be used for the A* search method in a
+	 * current state.
+	 * 
+	 * @return The heuristic cost.
+	 */
+	public int heuristicCost(Node current) {
+
+		int heuristicCost = 0;
+
+		if (current.getAction() != Action.SUCK) {
+			int distanceFactor;
+			int obstaclesFactor;
+			int orientationFactor;
+
+			int totalDistances = 0;
+			for (Position dirtPosition : current.getState().getDirtPositions()) {
+				totalDistances += current.getState().getRobotPos().getDistanceAsInteger(dirtPosition);
+
+				for (Position obsPosition : grid.getObstacles()) {
+//					if (hasObstacleInBetween()) {
+//						obstaclesFactor += Action.MOVE.getEngery() * 4;
+//					}
+				}
+			}
+			distanceFactor = totalDistances * Action.MOVE.getEngery();
+
+//			heuristicCost = distanceFactor + obstaclesFactor + orientationFactor;
+		}
+
+		return heuristicCost;
+
+		
+	}
 }

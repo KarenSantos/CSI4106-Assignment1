@@ -100,6 +100,35 @@ public class Position implements Comparable<Position> {
 		return position;
 	}
 
+	/**
+	 * Returns the distance between this position and the specified position as
+	 * another position.
+	 * 
+	 * @param p
+	 *            The position to find the distance.
+	 * @return The position containing the distance values.
+	 */
+	public Position getDistanceAsPosition(Position p) {
+		int x = this.getX() - p.getX();
+		int y = this.getY() - p.getY();
+		Position distance = new Position(x, y);
+		return distance;
+	}
+
+	/**
+	 * Returns the distance between this position and the specified position as
+	 * an integer.
+	 * 
+	 * @param p
+	 *            The position to find the distance.
+	 * @return The integer value that is the distance between the two position.
+	 */
+	public int getDistanceAsInteger(Position p) {
+		int x = Math.abs(this.getX() - p.getX());
+		int y = Math.abs(this.getY() - p.getY());
+		return x + y;
+	}
+
 	@Override
 	public String toString() {
 		return "pos(" + x + ", " + y + ")";

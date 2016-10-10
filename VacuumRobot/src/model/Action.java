@@ -13,10 +13,10 @@ public enum Action {
 
 	START(0), RIGHT(20), LEFT(20), MOVE(50), SUCK(10);
 
-	private int engery = 0;
+	private int energy = 0;
 
-	private Action(int engery) {
-		this.engery = engery;
+	private Action(int energy) {
+		this.energy = energy;
 	}
 
 	/**
@@ -40,10 +40,15 @@ public enum Action {
 	 * @return The energy cost for this action.
 	 */
 	public int getEngery() {
-		return engery;
+		return energy;
 	}
-	
-	public int Normalize(){
-		return SUCK.engery+MOVE.engery+LEFT.engery+RIGHT.engery;
+
+	/**
+	 * Returns the sum of all the energy costs of all actions.
+	 * 
+	 * @return The sum of all the energy costs of all actions.
+	 */
+	public int getTotalEnergy() {
+		return SUCK.energy + MOVE.energy + LEFT.energy + RIGHT.energy;
 	}
 }

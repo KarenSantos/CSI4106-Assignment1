@@ -2,9 +2,6 @@ package model;
 
 import java.util.List;
 
-// put in the state things that can change in the problem. not the obstacles.
-//if you have a consistent heuristic your f(n) will never decrease.
-
 /**
  * State class that has the action taken to arrive at this state, the robot
  * position and orientation after that action, and the dirt positions left to be
@@ -109,11 +106,29 @@ public class State {
 		this.dirtPositions.remove(dirtPosition);
 	}
 
+	/**
+	 * Returns if the list of dirt positions left to be cleaned contains the
+	 * current position of the robot.
+	 * 
+	 * @return If the list of dirt positions left to be cleaned contains the
+	 *         current position of the robot.
+	 */
+	public boolean isDirty() {
+		return this.getDirtPositions().contains(this.robotPos);
+	}
+
+	/**
+	 * Returns a string with the robot's position and orientation.
+	 */
 	@Override
 	public String toString() {
 		return robotPos + ", " + orientation;
 	}
 
+	/**
+	 * Two states are the same if they have the same robot's position,
+	 * orientation and the same positions of dirt to be cleaned.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		boolean result = false;

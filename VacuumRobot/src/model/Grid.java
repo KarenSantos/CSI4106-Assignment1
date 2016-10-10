@@ -203,8 +203,13 @@ public class Grid {
 		return freePositions.contains(position);
 	}
 
+	/**
+	 * Returns the longest possible distance inside the grid.
+	 * 
+	 * @return The longest possible distance inside the grid.
+	 */
 	public int getPossibleLongestDistance() {
-		return lines + columns - 1;
+		return lines + columns - 2;
 	}
 
 	/**

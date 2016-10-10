@@ -11,15 +11,29 @@ import model.Position;
 import model.SearchMethods;
 import model.SearchSolution;
 
+/**
+ * The RobotApp class has a main method that can initializes a grid, search the
+ * solution for that grid according to the search method specified, and prints
+ * it to the screen.
+ * 
+ * @author karensaroc
+ *
+ */
 public class RobotApp {
 
 	public static void main(String[] args) {
 
-		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3/2,4"), new Position(4, 3),
-				Orientation.WEST);
-		// Grid grid2 = generateGrid(4, 4, getPositions("2,2/2,3/3,2"),
-		// getPositions("1,2/2,1/3,3/4,2"),
-		// new Position(3, 4), Orientation.WEST);
+//		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3/2,4"), new Position(4, 3),
+//				Orientation.WEST);
+
+		Grid grid = generateGrid(7, 5, getPositions("1,3/3,2/3,3/3,4/6,2/6,3/5,4"), getPositions("2,4/4,3/6,5/7,1"),
+				new Position(1, 1), Orientation.EAST);
+
+		// No solution grid.
+//		 Grid grid = generateGrid(5, 5,
+//		 getPositions("2,1/2,2/2,3/2,4/2,5"),
+//		 getPositions("1,4"),
+//		 new Position(5, 5), Orientation.NORTH);
 
 		SearchSolution solution = search(1, grid);
 		printSolution(solution);
@@ -27,20 +41,21 @@ public class RobotApp {
 		SearchSolution solution2 = search(2, grid);
 		printSolution(solution2);
 
-		 SearchSolution solution3 = search(3, grid);
-		 printSolution(solution3);
+		SearchSolution solution3 = search(3, grid);
+		printSolution(solution3);
 	}
 
 	/**
 	 * Receives a solution for a search problem and prints the states of that
-	 * solution starting from the root node, and total cost, depth and time of
-	 * that solution. If node solution is null prints "No Solution".
+	 * solution starting from the root node, total cost, solution depth, maximum
+	 * depth, and time of that solution. If node solution is null prints "No
+	 * Solution".
 	 * 
 	 * @param solution
-	 *            The solution solution of the search problem.
+	 *            The solution for the search problem.
 	 */
 	private static void printSolution(SearchSolution solution) {
-		if (solution != null) {
+		if (solution.getSolutionNode() != null) {
 			System.out.println("------ " + solution.getSearchMethod() + " ------");
 			Stack<Node> allNodes = new Stack<>();
 			allNodes.add(solution.getSolutionNode());
@@ -55,6 +70,7 @@ public class RobotApp {
 			}
 			System.out.println("Total cost: " + solution.getSolutionNode().getCumulativeCost());
 			System.out.println("Depth: " + solution.getSolutionNode().getDepth());
+			System.out.println("MaxDepth: " + solution.getMaxDepth());
 			System.out.println("Time: " + solution.getDuration() + "ms");
 			System.out.println();
 		} else {
