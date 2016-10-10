@@ -21,6 +21,7 @@ public class SearchMethods {
 	private Grid grid;
 	private Node startNode;
 	private CostFunction costFunction;
+	private boolean isAStar;
 
 	/**
 	 * Creates a search method with a specified grid, a start state, a start
@@ -29,11 +30,12 @@ public class SearchMethods {
 	 * @param grid
 	 *            The grid to execute the search method.
 	 */
-	public SearchMethods(Grid grid, int method) {
+	public SearchMethods(Grid grid) {
 		this.grid = grid;
 		State startState = new State(grid.getStartPosition(), grid.getStartOrientation(), grid.getDirt());
 		this.startNode = new Node(null, startState, Action.START);
-		this.costFunction = new CostFunction(grid, method);
+		this.costFunction = new CostFunction(grid);
+		this.isAStar = false;
 	}
 
 	/**
@@ -43,25 +45,23 @@ public class SearchMethods {
 	 * @return A search solution using Depth-first search method.
 	 */
 	public SearchSolution DFS() {
-
+		this.isAStar = false;
 		SearchSolution solution = new SearchSolution(DFS);
 		List<Node> closed = new ArrayList<>();
 		Stack<Node> fringe = new Stack<Node>();
 		fringe.push(startNode);
+		
 		while (!fringe.isEmpty()) {
 			Node currentNode = fringe.pop();
-
 			if (currentNode.getState().getDirtPositions().isEmpty()) {
 				solution.setSolutionNode(currentNode);
 				break;
 			} else {
-				List<Node> children = getSuccessorsDFS(currentNode);
+				List<Node> children = getSuccessors(currentNode);
 				closed.add(currentNode);
-
 				for (Node n : children) {
 					if (!closed.contains(n) && !fringe.contains(n)) {
 						fringe.add(n);
-
 					}
 				}
 			}
@@ -76,7 +76,7 @@ public class SearchMethods {
 	 * @return A search solution using Breadth-first search method.
 	 */
 	public SearchSolution BFS() {
-
+		this.isAStar = false;
 		SearchSolution solution = new SearchSolution(BFS);
 		Queue<Node> fringe = new LinkedList<Node>();
 		List<Node> closed = new ArrayList<>();
@@ -88,7 +88,7 @@ public class SearchMethods {
 				solution.setSolutionNode(currentNode);
 				break;
 			} else {
-				List<Node> children = getSuccessorsDFS(currentNode);
+				List<Node> children = getSuccessors(currentNode);
 				closed.add(currentNode);
 				for (Node n : children) {
 					if (!closed.contains(n) && !fringe.contains(n)) {
@@ -107,21 +107,19 @@ public class SearchMethods {
 	 * @return A search solution using A* search method.
 	 */
 	public SearchSolution AStar() {
-
+		this.isAStar = true;
 		SearchSolution solution = new SearchSolution(AStar);
-		List<Node> closed = new ArrayList<>();
 		Queue<Node> fringe = new PriorityQueue<Node>();
-		fringe.offer(startNode);
+		fringe.offer(startNode);		
 		while (!fringe.isEmpty()) {
 			Node currentNode = fringe.poll();
 			if (currentNode.getState().getDirtPositions().isEmpty()) {
 				solution.setSolutionNode(currentNode);
 				break;
 			} else {
-				List<Node> children = getSuccessorsDFS(currentNode);
-				closed.add(currentNode);
+				List<Node> children = getSuccessors(currentNode);
 				for (Node n : children) {
-					if (!closed.contains(n))
+					if (!fringe.contains(n))
 						fringe.offer(n);
 				}
 			}
@@ -137,42 +135,38 @@ public class SearchMethods {
 	 *            The node from where to find the successor nodes.
 	 * @return A list of successor nodes for the specified node.
 	 */
-	private List<Node> getSuccessorsDFS(Node node) {
+	private List<Node> getSuccessors(Node node) {
 		List<Node> children = new ArrayList<>();
 		State state = node.getState();
 
-//		costFunction.setParentCost(node.getAction().getEngery());
 		List<Action> actions = Action.getActions();
 		for (Action a : actions) {
 			State childState = new State();
 
 			if (a == Action.LEFT) {
-
 				childState.setRobotPos(state.getRobotPos());
 				childState.setOrientation(getNewOrientation(state.getOrientation(), Action.LEFT));
 				childState.setDirtPositions(state.getDirtPositions());
 				Node childNode = new Node(node, childState, a);
-				costFunction.setFunctionCost(childNode);
+				if (isAStar) costFunction.setFunctionCost(childNode);
 				children.add(childNode);
 
 			} else if (a == Action.MOVE) {
 				Position newPosition = state.getRobotPos().showPositionMoving(state.getOrientation());
 				if (grid.isPositionAllowed(newPosition)) {
-
 					childState.setRobotPos(newPosition);
 					childState.setOrientation(state.getOrientation());
 					childState.setDirtPositions(state.getDirtPositions());
 					Node childNode = new Node(node, childState, a);
-					costFunction.setFunctionCost(childNode);
+					if (isAStar) costFunction.setFunctionCost(childNode);
 					children.add(childNode);
 				}
 			} else if (a == Action.RIGHT) {
-
 				childState.setRobotPos(state.getRobotPos());
 				childState.setOrientation(getNewOrientation(state.getOrientation(), Action.RIGHT));
 				childState.setDirtPositions(state.getDirtPositions());
 				Node childNode = new Node(node, childState, a);
-				costFunction.setFunctionCost(childNode);
+				if (isAStar) costFunction.setFunctionCost(childNode);
 				children.add(childNode);
 
 			} else if (a == Action.SUCK) {
@@ -182,7 +176,7 @@ public class SearchMethods {
 					childState.setDirtPositions(new ArrayList<Position>(state.getDirtPositions()));
 					childState.clean(state.getRobotPos());
 					Node childNode = new Node(node, childState, a);
-					costFunction.setFunctionCost(childNode);
+					if (isAStar) costFunction.setFunctionCost(childNode);
 					children.add(childNode);
 				}
 			}
@@ -225,5 +219,4 @@ public class SearchMethods {
 		}
 		return next;
 	}
-
 }

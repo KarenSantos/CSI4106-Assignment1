@@ -5,28 +5,28 @@ import java.util.Collections;
 import java.util.List;
 
 public class CostFunction {
-	private State current;
 
-	private int searchMethod;
 	private Grid grid;
 
-	public CostFunction(Grid grid, int searchMehod) {
-		this.searchMethod = searchMehod;
+	public CostFunction(Grid grid) {
 		this.grid = grid;
 	}
 
-	// TODO documentation
+	/**
+	 * Sets the function cost for the current node according to the cumulative
+	 * cost of the node and the heuristic from this node to the goal node.
+	 * 
+	 * @param currentNode
+	 */
 	public void setFunctionCost(Node currentNode) {
-		if (searchMethod == 3) {
-			currentNode.setFunctionCost(currentNode.getCumulativeCost() + heuristicCost());
-		}
+		currentNode.setFunctionCost(currentNode.getCumulativeCost() + heuristicCost(currentNode));
 	}
 
 	/**
 	 * Calculates the heuristic cost to be used for the A* search method in a
 	 * current state
 	 * 
-	 * @return The integer value of the heuristic.
+	 * @return The cost value of the heuristic.
 	 * 
 	 * 
 	 *         notice: there's one case that is not considered on this method:
@@ -35,26 +35,23 @@ public class CostFunction {
 	 *         this is the case, the corresponding node(path) will eventually be
 	 *         dequeued among the children nodes form the fringe.
 	 */
-	public int heuristicCost() {
+	public int heuristicCost(Node current) {
 		int herutisticCost;
-		Position robotPosition = current.getRobotPos();
-		Orientation currentOrientation = current.getOrientation();
+		Position robotPosition = current.getState().getRobotPos();
+		Orientation currentOrientation = current.getState().getOrientation();
 
 		// deal with special 2 cases
-
-		if (current.getDirtPositions().isEmpty())
+		if (current.getState().getDirtPositions().isEmpty()) {
 			herutisticCost = 0;
-		else if (current.getAction() == Action.SUCK) {
+		} else if (current.getAction() == Action.SUCK) {
 			herutisticCost = 0;
-			// System.out.println(" -1numOBj :
-			// "+0+"\t"+robotPosition.toString()+"\t"+(herutisticCost+current.getAction().getEngery())+"\t"+currentOrientation+"\t"+current.getAction());
 		}
 
 		// calculate possible shortest distance as well as # of obstacles in
 		// between
 
 		else {
-			List<Position> dirts = current.getDirtPositions();
+			List<Position> dirts = current.getState().getDirtPositions();
 			List<Position> distances = new ArrayList<>();
 
 			Position shortest;
@@ -188,7 +185,7 @@ public class CostFunction {
 				// of dirts)*factors
 
 				herutisticCost = ((grid.getPossibleLongestDistance() + 3 * grid.getObstacles().size())
-						* current.getDirtPositions().size()) * factor;
+						* current.getState().getDirtPositions().size()) * factor;
 
 				// System.out.println(" -1numOBj :
 				// "+numOfObs+"\t"+robotPosition.toString()+"\t"+(herutisticCost+current.getAction().getEngery())+"\t"+currentOrientation+"\t"+current.getAction());
@@ -199,7 +196,7 @@ public class CostFunction {
 				// upper bound of the ((cost of (distance + # of obstacles))* #
 				// of dirts)*factors
 				herutisticCost = ((Math.abs(shortest.getX()) + Math.abs(shortest.getY()) + 3 * numOfObs)
-						* current.getDirtPositions().size()) * factor;
+						* current.getState().getDirtPositions().size()) * factor;
 				// System.out.println(" NOT-1numOBj :
 				// "+numOfObs+"\t"+robotPosition.toString()+"\t"+shortest.toString()+"\t"+(herutisticCost+current.getAction().getEngery())+"\t"+currentOrientation+"\t"+current.getAction());
 

@@ -117,13 +117,22 @@ public class Node implements Comparable<Node> {
 	public int getCumulativeCost() {
 		return cumulativeCost;
 	}
-	
-	
-	// TODO documentation
+
+	/**
+	 * Returns the node's function cost.
+	 * 
+	 * @return The node's function cost.
+	 */
 	public int getFunctionCost() {
 		return functionCost;
 	}
 
+	/**
+	 * Sets the node's function cost.
+	 * 
+	 * @param functionCost
+	 *            The new function cost.
+	 */
 	public void setFunctionCost(int functionCost) {
 		this.functionCost = functionCost;
 	}
@@ -145,12 +154,16 @@ public class Node implements Comparable<Node> {
 		return result;
 	}
 
+	/**
+	 * Compares a node with this node according to the node's function cost.
+	 */
 	@Override
 	public int compareTo(Node o) {
-		if (this.getFunctionCost() <= o.getFunctionCost()){
-			return -1;
-		} else {
-			return 1;			
-		}
+		int result = 0;
+		if (this.getFunctionCost() <= o.getFunctionCost())
+			result = -1;
+		else
+			result = 1;
+		return result;
 	}
 }

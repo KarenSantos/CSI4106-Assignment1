@@ -21,15 +21,14 @@ public class RobotApp {
 		// getPositions("1,2/2,1/3,3/4,2"),
 		// new Position(3, 4), Orientation.WEST);
 
-//		SearchSolution solution = search(1, grid);
-//		printSolution(solution);
+		SearchSolution solution = search(1, grid);
+		printSolution(solution);
 
 		SearchSolution solution2 = search(2, grid);
 		printSolution(solution2);
-//
-//		SearchSolution solution3 = search(3, grid);
-//		printSolution(solution3);
 
+		 SearchSolution solution3 = search(3, grid);
+		 printSolution(solution3);
 	}
 
 	/**
@@ -76,16 +75,14 @@ public class RobotApp {
 	 * @return The node solution for that specified search.
 	 */
 	private static SearchSolution search(int method, Grid grid) {
-		SearchMethods search = new SearchMethods(grid, method);
+		SearchMethods search = new SearchMethods(grid);
 		SearchSolution solution = null;
 		if (method == 1) {
 			solution = search.DFS();
 		} else if (method == 2) {
 			solution = search.BFS();
 		} else if (method == 3) {
-
 			solution = search.AStar();
-
 		}
 		return solution;
 	}
@@ -144,5 +141,4 @@ public class RobotApp {
 		}
 		return positions;
 	}
-
 }
