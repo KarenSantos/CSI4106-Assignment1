@@ -117,6 +117,7 @@ public class SearchMethods {
 		solution.setMaxDepth(startNode.getDepth());
 		while (!fringe.isEmpty()) {
 			Node currentNode = fringe.poll();
+			System.out.println("chose node: " + currentNode.getAction() + ", " + currentNode.getFunctionCost());
 			solution.setMaxDepth(currentNode.getDepth());
 			if (currentNode.getState().getDirtPositions().isEmpty()) {
 				solution.setSolutionNode(currentNode);
@@ -142,6 +143,7 @@ public class SearchMethods {
 	 * @return A list of successor nodes for the specified node.
 	 */
 	private List<Node> getSuccessors(Node node) {
+		System.out.println();
 		List<Node> children = new ArrayList<>();
 		State state = node.getState();
 
