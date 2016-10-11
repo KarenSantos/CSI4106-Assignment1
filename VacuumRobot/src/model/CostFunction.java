@@ -32,7 +32,7 @@ public class CostFunction {
 	 * @param currentNode
 	 */
 	public void setFunctionCost(Node currentNode) {
-		currentNode.setFunctionCost(currentNode.getCumulativeCost() + hcost1(currentNode));
+		currentNode.setFunctionCost(currentNode.getCumulativeCost() + hcost(currentNode));
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class CostFunction {
 	 *            The current node.
 	 * @return The heuristic cost.
 	 */
-	public int hcost1(Node current) {
+	public int hcost(Node current) {
 		int herutisticCost;
 		Position robotPosition = current.getState().getRobotPos();
 		// Orientation currentOrientation = current.getState().getOrientation();
@@ -65,43 +65,6 @@ public class CostFunction {
 			Position dis = distances.get(0);
 			herutisticCost = Math.max(Math.abs(dis.getX()), Math.abs(dis.getY()));
 		}
-
 		return herutisticCost;
-
-	}
-
-	/**
-	 * Calculates the heuristic cost to be used for the A* search method in a
-	 * current state.
-	 * 
-	 * @return The heuristic cost.
-	 */
-	public int heuristicCost(Node current) {
-
-		int heuristicCost = 0;
-
-		if (current.getAction() != Action.SUCK) {
-			int distanceFactor;
-			int obstaclesFactor;
-			int orientationFactor;
-
-			int totalDistances = 0;
-			for (Position dirtPosition : current.getState().getDirtPositions()) {
-				totalDistances += current.getState().getRobotPos().getDistanceAsInteger(dirtPosition);
-
-				for (Position obsPosition : grid.getObstacles()) {
-//					if (hasObstacleInBetween()) {
-//						obstaclesFactor += Action.MOVE.getEngery() * 4;
-//					}
-				}
-			}
-			distanceFactor = totalDistances * Action.MOVE.getEngery();
-
-//			heuristicCost = distanceFactor + obstaclesFactor + orientationFactor;
-		}
-
-		return heuristicCost;
-
-		
 	}
 }

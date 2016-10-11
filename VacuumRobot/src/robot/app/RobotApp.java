@@ -23,11 +23,13 @@ public class RobotApp {
 
 	public static void main(String[] args) {
 
-//		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3/2,4"), new Position(4, 3),
-//				Orientation.WEST);
+		// assignment sample grid
+		Grid grid = generateGrid(4, 4, getPositions("2,2/2,3/3,2"), getPositions("1,2/2,1/3,3/2,4"), new Position(4, 3),
+				Orientation.WEST);
 
-		Grid grid = generateGrid(7, 5, getPositions("1,3/3,2/3,3/3,4/6,2/6,3/5,4"), getPositions("2,4/4,3/6,5/7,1"),
-				new Position(1, 1), Orientation.EAST);
+		// bigger grid
+//		Grid grid = generateGrid(7, 5, getPositions("1,3/3,2/3,3/3,4/6,2/6,3/5,4"), getPositions("2,4/4,3/6,5/7,1"),
+//				new Position(1, 1), Orientation.EAST);
 
 		// No solution grid.
 //		 Grid grid = generateGrid(5, 5,
