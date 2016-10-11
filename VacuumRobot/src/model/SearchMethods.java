@@ -112,6 +112,7 @@ public class SearchMethods {
 		this.isAStar = true;
 		SearchSolution solution = new SearchSolution(AStar);
 		Queue<Node> fringe = new PriorityQueue<Node>();
+		List<Node> closed = new ArrayList<>();
 		fringe.offer(startNode);
 		solution.setMaxDepth(startNode.getDepth());
 		while (!fringe.isEmpty()) {
@@ -122,8 +123,9 @@ public class SearchMethods {
 				break;
 			} else {
 				List<Node> children = getSuccessors(currentNode);
+				closed.add(currentNode);
 				for (Node n : children) {
-					if (!fringe.contains(n))
+					if (!closed.contains(n) && !fringe.contains(n))
 						fringe.offer(n);
 				}
 			}
